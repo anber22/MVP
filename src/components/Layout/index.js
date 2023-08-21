@@ -59,7 +59,7 @@ export default function Template (props) {
         <Header
           style={{
             padding: 0,
-            "background-color": 'white',
+            "backgroundColor": 'white',
           }}
           className='flex justify-between'
         >
