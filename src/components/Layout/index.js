@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
+  PushpinTwoTone,
+  ShoppingTwoTone,
+  ThunderboltTwoTone,
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme } from 'antd';
 const { Header, Sider, Content } = Layout;
@@ -39,17 +39,17 @@ export default function Template (props) {
           items={[
             {
               key: '1',
-              icon: <UserOutlined />,
-              label: 'nav 1',
+              icon: <ShoppingTwoTone />,
+              label: 'My Product',
             },
             {
               key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2',
+              icon: <ThunderboltTwoTone />,
+              label: 'Add Credits',
             },
             {
               key: '3',
-              icon: <UploadOutlined />,
+              icon: <PushpinTwoTone />,
               label: 'nav 3',
             },
           ]}
