@@ -3,7 +3,7 @@ import {ref, useState, useRef} from 'react';
 import Canvas from '@/components/canvas';
 
 export default function SegmentAnything() {
-  const actionType = 'line'
+  const actionType = 'dot'
   const step1 = async (img, points) => {
     console.log('执行第一步', img, points)
     const reviewsResponse = await fetch(
