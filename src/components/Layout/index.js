@@ -29,8 +29,8 @@ export default function Template (props) {
         collapsible 
         collapsed={collapsed}
       >
-        <div className="layout-logo text-black flex justify-center items-center">
-          LOGO
+        <div className="layout-logo-box text-black flex justify-center items-center">
+          <img className='logo-img' src='/logo-white.png'/>
         </div>
         <Menu
           theme="light"
@@ -79,7 +79,6 @@ export default function Template (props) {
         </Header>
         <Content
           style={{
-            margin: '24px 16px',
             padding: 24,
             minHeight: 280,
             // background: colorBgContainer,
