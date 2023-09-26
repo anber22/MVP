@@ -7,18 +7,23 @@ function AA (){
   // const props = {actionType: 'line', step1}
   let [endResult, setEndResult] = useState()
   const [current, setCurrent] = useState(0);
-  const onChange = (value) => {
-    console.log('onChange:', value);
+  let [fullMask, setFullMask] = useState('')
+  const onChange = async (value) => {
     setCurrent(value);
   };
-  const description = 'This is a description.';
-  const getComponent = () => {
-    if(current === 0){
-      return <SegmentAnything/>
-    } else {
-      return <ControlNet/>
-    }
+  const description = '';
+  const getMask = (mask) => {
+    setFullMask(mask)
+    console.log('ControlNet拿到mask', fullMask)
   }
+  // const getComponent = () => {
+  //   console.log('fullMask', fullMask)
+  //   if(current === 0){
+  //     return <SegmentAnything getMask={getMask}/>
+  //   } else {
+  //     return <ControlNet fullMask={fullMask}/>
+  //   }
+  // }
   return (
     <div className='flex-grow overflow-y-auto'>
       <div className='flex justify-between mb-2'>
@@ -30,21 +35,26 @@ function AA (){
         onChange={onChange}
         items={[
           {
-            title: 'Step 1',
+            title: 'Product Selection',
             description,
           },
           {
-            title: 'Step 2',
+            title: 'Describe your need',
             description,
           },
           {
-            title: 'Step 3',
+            title: 'Choose Demo',
             description,
           },
         ]}
       />
-      { getComponent() }
-      <img className='relative result-img' ref={(ref)=> setEndResult(ref)}/>
+      <div className={ current !== 0 ? 'hidden' : '' }>
+        <SegmentAnything getMask={getMask}/>
+      </div>
+      <div className={ (current !== 1 ? 'hidden' : '') + ' relative' }>
+        <ControlNet fullMask={fullMask}/>
+      </div>
+      {/* <img className='relative result-img' ref={(ref)=> setEndResult(ref)}/> */}
     </div>
     
   )

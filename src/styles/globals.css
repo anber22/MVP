@@ -22,6 +22,7 @@ body {
 }
 main{
   display: flex;
+  padding-bottom: 0px !important;
 }
 .layout-box{
   width: 100%;
@@ -46,16 +47,15 @@ main{
 }
 .canvass{
   height: auto;
-  display: block;
-  float: left;
   box-sizing: border-box;
   z-index: 9;
+  left: 0px;
 }
 .image{
   width: 300px;
   height: 200px;
   z-index: 1;
-  border: 1px solid black;
+  border: 1px solid 666;
 }
 
 .select-img-btn{
@@ -64,7 +64,7 @@ main{
 }
 
 .canvas-result-box{
-  top: 260px;
+  /* top: 260px; */
 }
 .line-width-slider{
   width: 200px;
@@ -74,6 +74,102 @@ main{
 }
 .result-img{
   width: 300px;
-  height: 300px;
-  top: 450px;
+  height: 200px;
+  object-fit: contain;
+}
+.control-net-box{
+  top: 250px;
+}
+.control-net-img{
+  width: 300px;
+  height: 200px;
+}
+
+.content-box{
+  position: static;
+  width: auto;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 6px;
+  padding: 20px;
+  box-shadow: #666 0px 0px 10px;
+}
+.canvas-box{
+  position: relative;
+  width: 50%;
+}
+.canvas-box::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  height: 200px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* login */
+.login-box{
+  height: 100vh;
+  box-sizing: border-box;
+}
+.login-header{
+  height: 90px;
+  box-sizing: border-box;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 32px;
+}
+.login-content{
+  height: calc(100% - 80px);
+  background-color: rgba(0, 51, 102, 1);
+}
+.login-content-text{
+  color: white;
+  font-size: 42px;
+}
+.login-form-box{
+  width: 438px;
+  height: 534px;
+  border-radius: 10px;
+  background-color: #fff;
+}
+.google-login{
+  width: calc(100% - 32px);
+  margin-left: 16px;
+  color: #1e90ff;
+  box-sizing: border-box;
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+.login-input{
+  width: calc(100% - 32px);
+  margin-left: 16px;
+  height: 42px !important;
+}
+.forgot-password{
+  color: #1e90ff;
+  padding-right: 16px;
+}
+.login-btn{
+  width: calc(100% - 32px);
+  margin-left: 16px;
+  height: 42px !important;
+}
+.sign-up{
+  color: #1e90ff;
 }
