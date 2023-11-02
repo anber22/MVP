@@ -2,7 +2,15 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "http://8.217.225.166:7860/$1"
+      "dest": "https://aiproshots-api.uptradeit.com/$1"
+    },
+    {
+      "src": "/mvp/(.*)",
+      "dest": "https://aiproshots-api.uptradeit.com/aiproshots-api/$1"
+    },
+    {
+      "src": "/img/(.*)",
+      "dest": "https://aiproshots-image.s3.amazonaws.com/$1"
     }
   ]
 }

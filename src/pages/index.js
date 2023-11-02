@@ -1,49 +1,44 @@
 import { Button, Input, Space, Table, Tag } from 'antd';
-import {ref, useState, useRef} from 'react';
+import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 import Router from "next/router"
 function Index (){
-  const columns = [
+  let columns = [
     {
       title: 'Product',
-      dataIndex: 'Product',
-      key: 'Product',
-      render: (text) => <a>{text}</a>,
+      dataIndex: 'productCoverUrl',
+      key: 'productCoverUrl',
+      render: (productCoverUrl) => <img className='product-img' src={productCoverUrl} />
     },
     {
       title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'productName',
+      key: 'productName',
     },
     {
       title: 'Created Date',
-      dataIndex: 'Created Date',
-      key: 'Created Date',
+      dataIndex: 'createDate',
+      key: 'createDate',
     }
   ]
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser']
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher']
-    }
-  ]
+  const [data, setData] = useState([])
+  useEffect(() => {
+    getProducts()
+  }, [])
+  const getProducts = async () => {
+    const products = await fetch(
+      "/mvp/ai/home/product",
+      {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImI0ZjE4YTY3LTFjZWMtNGU1My1hMDYyLWI3OWUwZDE3YmMwNCJ9.-Kwmpg96C9jGqqv9Vf0vC_aAcrV1IALdpzMkGmc5jcpovD3oVgGQWXzZBftTEBRFtf34iUlA5tnqAEHj-vx_cA'
+        }
+      }
+    ).then((response) => response.json());
+     // console.log('获取商品列表', products)
+    setData(products.rows)
+  }
   return (
     <div className='flex-grow overflow-y-auto'>
       <div className='flex justify-between'>
@@ -54,7 +49,22 @@ function Index (){
         <Input className='h-8 mt-4 w-96' placeholder="Search by product name" />
         <Button className='mt-4 ml-2' type="primary" onClick={() => {Router.push('/createImage')}}>to generate</Button>
       </div>
-      <Table className='mt-4' columns={columns} dataSource={data} />
+      <Table 
+        onRow={(record) => {
+          return {
+            onClick: (event) => {
+              Router.push({
+                pathname: '/productImgs', 
+                query: {
+                  id: record.productId
+                }
+              })}, // 点击行
+          };
+        }} 
+        className='mt-4' 
+        columns={columns} 
+        dataSource={data}
+      />
     </div>
     
   )

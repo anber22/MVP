@@ -9,7 +9,7 @@ import {
 import { Layout, Menu, Button, theme } from 'antd';
 const { Header, Sider, Content } = Layout;
 export default function Template (props) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   // const {
   //   token: { colorBgContainer },
   // } = theme.useToken();
@@ -41,17 +41,7 @@ export default function Template (props) {
               key: '1',
               icon: <ShoppingTwoTone />,
               label: 'My Product',
-            },
-            {
-              key: '2',
-              icon: <ThunderboltTwoTone />,
-              label: 'Add Credits',
-            },
-            {
-              key: '3',
-              icon: <PushpinTwoTone />,
-              label: 'nav 3',
-            },
+            }
           ]}
         />
       </Sider>

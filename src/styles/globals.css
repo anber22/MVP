@@ -50,10 +50,11 @@ main{
   box-sizing: border-box;
   z-index: 9;
   left: 0px;
+  top: 0px;
 }
 .image{
-  width: 300px;
-  height: 200px;
+  width: 600px;
+  height: 300px;
   z-index: 1;
   border: 1px solid 666;
 }
@@ -69,8 +70,8 @@ main{
 .line-width-slider{
   width: 200px;
   position: absolute;
-  left: 370px;
-  top: 60px;
+  left: 30px;
+  top: 340px;
 }
 .result-img{
   width: 300px;
@@ -172,4 +173,18 @@ main{
 }
 .sign-up{
   color: #1e90ff;
+}
+.product-img{
+  width: 80px;
+  height: 80px;
+}
+.product-img-detail{
+  width: 120px;
+  height: 120px;
+}
+
+
+
+.w-370{
+  width: 370px;
 }
