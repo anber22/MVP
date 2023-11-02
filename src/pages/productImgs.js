@@ -42,7 +42,7 @@ function Index (){
       </div>
       {
         imgs ? imgs.map((item, index) => {
-          return (<img className='product-img-detail mr-4 cursor-pointer' src={item.photoUrl} onClick={() => toPainting(item)}/>)
+          return (<img className='product-img-detail mr-4 cursor-pointer' src={item.photoUrl} key={index} onClick={() => toPainting(item)}/>)
         }) : ''
       }
     </div>
