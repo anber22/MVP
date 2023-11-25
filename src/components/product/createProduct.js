@@ -562,7 +562,8 @@ export default function ChooseDemo({backToList}) {
                 </div>
               ) : (
                 <div className='border-dashed p-4 mt-2 address-info-box'>
-                  Don't have the perfect photo to upload?
+                  
+                  {`Don't have the perfect photo to upload?`}
                   <br/>
                   We will do it for you. Please fill out the form below to send your product to us.
                   <Form
