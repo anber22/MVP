@@ -6,9 +6,9 @@ import ChooseDemo from '@/components/chooseDemo';
 import ControlNet from '@/components/controlNet';
 import Done from '@/components/done';
 import { useRouter } from 'next/router';
-
+import Router from "next/router"
+import Cookies from 'js-cookie';
 function AA (){
-  // const props = {actionType: 'line', step1}
   let [endResult, setEndResult] = useState()
   const [current, setCurrent] = useState(0);
   let [fullMask, setFullMask] = useState('')
@@ -23,13 +23,13 @@ function AA (){
   let [showStatus, setShowStatus] = useState(false)
   const description = ''
   const onChange = async (value) => {
-    setCurrent(value);
+    // 仅可以回退
+    if(current > value) setCurrent(value);
   };
   const router = useRouter();
   const {query} = router
   useEffect(() => {
     const { hasMask, photoId } = query;
-     // console.log('进入组件', hasMask, photoId, router, query)
     if(photoId){
       setPhotoId(photoId)
       getPhotoMask(photoId) 
@@ -43,14 +43,17 @@ function AA (){
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImE0OWIzNzlkLTQyN2UtNDRiMC04ZWE5LThiOWFjNDI4YTk3NiJ9.u1i4Z1OJl04Skfq_sL8v_u92MdKxt3xzU2mboF4XKSas7hGpBPXvxu6ZG41d2ZVc1YiNMUJn8gZcUhj_fzZLPw'
+          'Authorization': Cookies.get('token')
         }
       }
     ).then((response) => response.json());
+    if(photos.code === 401){
+      Router.push({
+        pathname: '/login', 
+      })
+    }
     setImgs(photos.data)
     if(photos && photos.data && photos.data.maskShowUrl) setCurrent(1)
-    // setImgs(products.data)
-     // console.log('获取商品列表', photos)
     setShowStatus(true)
   }
   const getMask = async (masks) => {
@@ -60,29 +63,30 @@ function AA (){
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImE0OWIzNzlkLTQyN2UtNDRiMC04ZWE5LThiOWFjNDI4YTk3NiJ9.u1i4Z1OJl04Skfq_sL8v_u92MdKxt3xzU2mboF4XKSas7hGpBPXvxu6ZG41d2ZVc1YiNMUJn8gZcUhj_fzZLPw'
+          'Authorization': Cookies.get('token')
         }
       }
     ).then((response) => response.json());
+    if(photos.code === 401){
+      Router.push({
+        pathname: '/login', 
+      })
+    }
     setImgs(photos.data)
     setFullMask(masks)
     setMaskInfo(masks)
     setCurrent(1)
-     // console.log('ControlNet拿到mask', fullMask)
   }
   const getMjNewImg = e => {
-     // console.log('主页面获取mj图片', e)
     setMjImgs(e)
     setCurrent(2)
   }
   const selectMjImg = e => {
-     // console.log('主页面监听到选中图片', e, maskInfo, imgs)
     setMjImg(e)
     setCurrent(3)
   }
   const getSdImgs = e => {
     setSdImgs(e)
-     // console.log('拿到sd图片', e, sdImgs)
     setCurrent(4)
   }
   const doneGetSdImg = () => {
@@ -91,14 +95,9 @@ function AA (){
   const chooseSdImg = e => {
     setSdImg(e)
   }
-  // const getComponent = () => {
-  //    // console.log('fullMask', fullMask)
-  //   if(current === 0){
-  //     return <SegmentAnything getMask={getMask}/>
-  //   } else {
-  //     return <ControlNet fullMask={fullMask}/>
-  //   }
-  // }
+  const backToPrevious = () => {
+    setCurrent(current - 1)
+  }
   return (
     showStatus ? (
     <div className='flex-grow overflow-y-auto'>
@@ -136,7 +135,7 @@ function AA (){
         <SegmentAnything getMask={getMask} picture={imgs} photoId={photoId}/>
       </div>
       <div className={ current !== 1 ? 'hidden' : '' }>
-        <HasMask imgs={imgs} masks={maskInfo} gotMjImg={getMjNewImg}/>
+        <HasMask imgs={imgs} masks={maskInfo} gotMjImg={getMjNewImg} backToPrevious={() => backToPrevious()}/>
       </div>
       <div className={ current !== 2 ? 'hidden' : '' }>
         <ChooseDemo imgs={mjImgs} chooseDemo={selectMjImg}/>

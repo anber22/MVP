@@ -1,3 +1,5 @@
+import Router from "next/router"
+import Cookies from 'js-cookie';
 export default class Mj{
   async imgToImg(image, preposition, description, callBack) {
      // console.log('mj参数', image, preposition, description)
@@ -7,7 +9,7 @@ export default class Mj{
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImE0OWIzNzlkLTQyN2UtNDRiMC04ZWE5LThiOWFjNDI4YTk3NiJ9.u1i4Z1OJl04Skfq_sL8v_u92MdKxt3xzU2mboF4XKSas7hGpBPXvxu6ZG41d2ZVc1YiNMUJn8gZcUhj_fzZLPw'
+          'Authorization': Cookies.get('token')
         },
         body: JSON.stringify({
           "description": description,
@@ -18,6 +20,11 @@ export default class Mj{
         })
       }
     ).then((response) => response.json());
+    if(result.code === 401){
+      Router.push({
+        pathname: '/login', 
+      })
+    }
      // console.log('mj生图结果', result)
     const timer = setInterval(async () => {
       const createResult = await fetch(
@@ -26,10 +33,15 @@ export default class Mj{
           method: "GET",
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImE0OWIzNzlkLTQyN2UtNDRiMC04ZWE5LThiOWFjNDI4YTk3NiJ9.u1i4Z1OJl04Skfq_sL8v_u92MdKxt3xzU2mboF4XKSas7hGpBPXvxu6ZG41d2ZVc1YiNMUJn8gZcUhj_fzZLPw'
+            'Authorization': Cookies.get('token')
           }
         }
       ).then((response) => response.json());
+      if(createResult.code === 401){
+        Router.push({
+          pathname: '/login', 
+        })
+      }
       if(createResult.data.taskStatus === 1){
         callBack(createResult.data.photos)
         clearInterval(timer)

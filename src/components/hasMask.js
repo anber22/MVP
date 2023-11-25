@@ -4,7 +4,7 @@ import Mj from '@/components/mj';
 import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 
-export default function HasMask({imgs, masks, gotMjImg}) {
+export default function HasMask({imgs, masks, gotMjImg, backToPrevious}) {
   const { TextArea } = Input;
   const options = [
     {
@@ -49,6 +49,10 @@ export default function HasMask({imgs, masks, gotMjImg}) {
      // console.log('拿到mj的图片', e)
     gotMjImg(e)
   }
+  const back = () => {
+    console.log('返回')
+    backToPrevious()
+  }
   return (
     <div className='flex content-box'>
       <div className='w-80 flex flex-col'>
@@ -56,15 +60,14 @@ export default function HasMask({imgs, masks, gotMjImg}) {
           Your Image
         </div>
         <div className='flex w-full justify-start'>
-          <img className='w-9/12' src={imgs.photoUrl} />
+          <img className='w-9/12 mt-6' src={imgs.photoUrl} />
         </div>
       </div>
       <div className='w-80 flex flex-col'>
-        <div className='flex h-10 items-start'>
+        <div className='flex h-10 items-center'>
           Product Selected 
-          <Button className='w-16 ml-4' type="primary">Reset</Button>
         </div>
-        <img className='w-9/12' src={imgs.maskShowUrl}/>
+        <img className='w-9/12 mt-6' src={imgs.maskShowUrl}/>
       </div>
       <div className='flex flex-col'>
         <div className='flex h-10 items-center'>
@@ -80,7 +83,7 @@ export default function HasMask({imgs, masks, gotMjImg}) {
           />
           <TextArea className='w-370 mt-4' onChange={e => setDescription(e.target.value)} rows={4} placeholder="on a luxury marble coutertop kitchen island." maxLength={50} />
         <div className='w-full flex mt-4'>
-          <Button className='w-36' type="primary">Black</Button>
+          <Button className='w-36' type="primary" onClick={() => {back()}}>Back</Button>
           <Button className='w-36 ml-6' type="primary" onClick={() => createMjImgToImg()}>Next</Button>
         </div>
       </div>

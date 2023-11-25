@@ -2,12 +2,13 @@ import { Select, Input, Button , Popover } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import {ref, useState, useRef} from 'react';
 import Canvas from '@/components/canvas';
-
+import Router from "next/router"
+import Cookies from 'js-cookie';
 export default function SegmentAnything({getMask, picture, photoId}) {
   const actionType = 'dot'
   let [endResult, setEndResult] = useState()
   const { TextArea } = Input;
-
+  let [loading, setLoading] = useState(false)
   const options = [
     {
       value: '0',
@@ -41,17 +42,15 @@ export default function SegmentAnything({getMask, picture, photoId}) {
     </div>
   );
   const step1 = async (img, points) => {
-     // console.log('执行第一步', img, points)
+    setLoading(true)
     const reviewsResponse = await fetch(
       "api/sam/heartbeat"
     ).then((response) => response.json());
-     // console.log('服务状态', reviewsResponse) // {msg: "Success!"}
     const samModels = await fetch(
       "api/sam/sam-model"
     ).then((response) => response.json());
-     // console.log('sam模型列表', samModels, img)
     let data = {
-      "sam_model_name": "sam_vit_h_4b8939.pth",
+      "sam_model_name": samModels[0],
       "input_image": img,
       "sam_positive_points": points,
       "dino_enabled": false,
@@ -64,13 +63,12 @@ export default function SegmentAnything({getMask, picture, photoId}) {
       {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       }
     ).then((response) => response.json());
-     // console.log('抠图结果', result)
-    // endResult.src = 'data:image/png;base64,' + result.masks[1]
+    setLoading(false)
     const controlMaskRes = await uploadImg(result.masks[1])
     const showMaskRes = await uploadImg(result.blended_images[0])
     submitMask(controlMaskRes, showMaskRes)
@@ -95,7 +93,6 @@ export default function SegmentAnything({getMask, picture, photoId}) {
     return theBlob;
   }
   const submitMask = async (controlMaskRes, showMaskRes, mask) => {
-     // console.log('mask图片路径', controlMaskRes, showMaskRes)
     const data = {
       'maskControlUrl': controlMaskRes,
       'maskShowPhotoUrl': showMaskRes
@@ -106,12 +103,16 @@ export default function SegmentAnything({getMask, picture, photoId}) {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImE0OWIzNzlkLTQyN2UtNDRiMC04ZWE5LThiOWFjNDI4YTk3NiJ9.u1i4Z1OJl04Skfq_sL8v_u92MdKxt3xzU2mboF4XKSas7hGpBPXvxu6ZG41d2ZVc1YiNMUJn8gZcUhj_fzZLPw'
+          'Authorization': Cookies.get('token')
         },
         body: JSON.stringify(data) 
       }
     ).then((response) => response.json());
-     // console.log('上传mask结果', result)
+    if(result.code === 401){
+      Router.push({
+        pathname: '/login', 
+      })
+    }
     if(result.code === 200){
       getMasks(data)
     }
@@ -120,19 +121,22 @@ export default function SegmentAnything({getMask, picture, photoId}) {
     const data = new FormData()
     var blob = dataURLtoBlob('data:image/png;base64,' + mask);
     const file = blobToFile(blob, 'xxxx');
-     // console.log('需要上传的图片', file)
     data.append('file', file)
     const uploadImg = await fetch(
       "/mvp/ai/product/file",
       {
         method: "POST",
         headers: {
-          'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImE0OWIzNzlkLTQyN2UtNDRiMC04ZWE5LThiOWFjNDI4YTk3NiJ9.u1i4Z1OJl04Skfq_sL8v_u92MdKxt3xzU2mboF4XKSas7hGpBPXvxu6ZG41d2ZVc1YiNMUJn8gZcUhj_fzZLPw'
+          'Authorization': Cookies.get('token')
         },
         body: data
       }
     ).then((response) => response.json());
-     // console.log('上传图片结果', uploadImg)
+    if(uploadImg.code === 401){
+      Router.push({
+        pathname: '/login', 
+      })
+    }
     return uploadImg.data.fileUrl
   }
   const getMasks = e => {

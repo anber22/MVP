@@ -1,0 +1,354 @@
+{
+  "states": [
+    {
+      "name": "Alabama",
+      "abbreviation": "AL",
+      "capital": "Montgomery",
+      "largest_city": "Birmingham",
+      "population": 4903185
+    },
+    {
+      "name": "Alaska",
+      "abbreviation": "AK",
+      "capital": "Juneau",
+      "largest_city": "Anchorage",
+      "population": 731545
+    },
+    {
+      "name": "Arizona",
+      "abbreviation": "AZ",
+      "capital": "Phoenix",
+      "largest_city": "Phoenix",
+      "population": 7278717
+    },
+    {
+      "name": "Arkansas",
+      "abbreviation": "AR",
+      "capital": "Little Rock",
+      "largest_city": "Little Rock",
+      "population": 3017804
+    },
+    {
+      "name": "California",
+      "abbreviation": "CA",
+      "capital": "Sacramento",
+      "largest_city": "Los Angeles",
+      "population": 39538223
+    },
+    {
+      "name": "Colorado",
+      "abbreviation": "CO",
+      "capital": "Denver",
+      "largest_city": "Denver",
+      "population": 5773714
+    },
+    {
+      "name": "Connecticut",
+      "abbreviation": "CT",
+      "capital": "Hartford",
+      "largest_city": "Bridgeport",
+      "population": 3605944
+    },
+    {
+      "name": "Delaware",
+      "abbreviation": "DE",
+      "capital": "Dover",
+      "largest_city": "Wilmington",
+      "population": 989948
+    },
+    {
+      "name": "Florida",
+      "abbreviation": "FL",
+      "capital": "Tallahassee",
+      "largest_city": "Jacksonville",
+      "population": 21538187
+    },
+    {
+      "name": "Georgia",
+      "abbreviation": "GA",
+      "capital": "Atlanta",
+      "largest_city": "Atlanta",
+      "population": 10711908
+    },
+    {
+      "name": "Hawaii",
+      "abbreviation": "HI",
+      "capital": "Honolulu",
+      "largest_city": "Honolulu",
+      "population": 1455271
+    },
+    {
+      "name": "Idaho",
+      "abbreviation": "ID",
+      "capital": "Boise",
+      "largest_city": "Boise",
+      "population": 1839106
+    },
+    {
+      "name": "Illinois",
+      "abbreviation": "IL",
+      "capital": "Springfield",
+      "largest_city": "Chicago",
+      "population": 12812508
+    },
+    {
+      "name": "Indiana",
+      "abbreviation": "IN",
+      "capital": "Indianapolis",
+      "largest_city": "Indianapolis",
+      "population": 6785528
+    },
+    {
+      "name": "Iowa",
+      "abbreviation": "IA",
+      "capital": "Des Moines",
+      "largest_city": "Des Moines",
+      "population": 3190369
+    },
+    {
+      "name": "Kansas",
+      "abbreviation": "KS",
+      "capital": "Topeka",
+      "largest_city": "Wichita",
+      "population": 2937880
+    },
+    {
+      "name": "Kentucky",
+      "abbreviation": "KY",
+      "capital": "Frankfort",
+      "largest_city": "Louisville",
+      "population": 4505836
+    },
+    {
+      "name": "Louisiana",
+      "abbreviation": "LA",
+      "capital": "Baton Rouge",
+      "largest_city": "New Orleans",
+      "population": 4648794
+    },
+    {
+      "name": "Maine",
+      "abbreviation": "ME",
+      "capital": "Augusta",
+      "largest_city": "Portland",
+      "population": 1362359
+    },
+    {
+      "name": "Maryland",
+      "abbreviation": "MD",
+      "capital": "Annapolis",
+      "largest_city": "Baltimore",
+      "population": 6177224
+    },
+    {
+      "name": "Massachusetts",
+      "abbreviation": "MA",
+      "capital": "Boston",
+      "largest_city": "Boston",
+      "population": 7029917
+    },
+    {
+      "name": "Michigan",
+      "abbreviation": "MI",
+      "capital": "Lansing",
+      "largest_city": "Detroit",
+      "population": 10077331
+    },
+    {
+      "name": "Minnesota",
+      "abbreviation": "MN",
+      "capital": "Saint Paul",
+      "largest_city": "Minneapolis",
+      "population": 5706494
+    },
+    {
+      "name": "Mississippi",
+      "abbreviation": "MS",
+      "capital": "Jackson",
+      "largest_city": "Jackson",
+      "population": 2961279
+    },
+    {
+      "name": "Missouri",
+      "abbreviation": "MO",
+      "capital": "Jefferson City",
+      "largest_city": "Kansas City",
+      "population": 6160281
+    },
+    {
+      "name": "Montana",
+      "abbreviation": "MT",
+      "capital": "Helena",
+      "largest_city": "Billings",
+      "population": 1084225
+    },
+    {
+      "name": "Nebraska",
+      "abbreviation": "NE",
+      "capital": "Lincoln",
+      "largest_city": "Omaha",
+      "population": 1961504
+    },
+    {
+      "name": "Nevada",
+      "abbreviation": "NV",
+      "capital": "Carson City",
+      "largest_city": "Las Vegas",
+      "population": 3104614
+    },
+    {
+      "name": "New Hampshire",
+      "abbreviation": "NH",
+      "capital": "Concord",
+      "largest_city": "Manchester",
+      "population": 1377529
+    },
+    {
+      "name": "New Jersey",
+      "abbreviation": "NJ",
+      "capital": "Trenton",
+      "largest_city": "Newark",
+      "population": 9288994
+    },
+    {
+      "name": "New Mexico",
+      "abbreviation": "NM",
+      "capital": "Santa Fe",
+      "largest_city": "Albuquerque",
+      "population": 2117522
+    },
+    {
+      "name": "New York",
+      "abbreviation": "NY",
+      "capital": "Albany",
+      "largest_city": "New York City",
+      "population": 20201249
+    },
+    {
+      "name": "North Carolina",
+      "abbreviation": "NC",
+      "capital": "Raleigh",
+      "largest_city": "Charlotte",
+      "population": 10439388
+    },
+    {
+      "name": "North Dakota",
+      "abbreviation": "ND",
+      "capital": "Bismarck",
+      "largest_city": "Fargo",
+      "population": 779094
+    },
+    {
+      "name": "Ohio",
+      "abbreviation": "OH",
+      "capital": "Columbus",
+      "largest_city": "Columbus",
+      "population": 11799448
+    },
+    {
+      "name": "Oklahoma",
+      "abbreviation": "OK",
+      "capital": "Oklahoma City",
+      "largest_city": "Oklahoma City",
+      "population": 3959353
+    },
+    {
+      "name": "Oregon",
+      "abbreviation": "OR",
+      "capital": "Salem",
+      "largest_city": "Portland",
+      "population": 4237256
+    },
+    {
+      "name": "Pennsylvania",
+      "abbreviation": "PA",
+      "capital": "Harrisburg",
+      "largest_city": "Philadelphia",
+      "population": 13002700
+    },
+    {
+      "name": "Rhode Island",
+      "abbreviation": "RI",
+      "capital": "Providence",
+      "largest_city": "Providence",
+      "population": 1097379
+    },
+    {
+      "name": "South Carolina",
+      "abbreviation": "SC",
+      "capital": "Columbia",
+      "largest_city": "Charleston",
+      "population": 5118425
+    },
+    {
+      "name": "South Dakota",
+      "abbreviation": "SD",
+      "capital": "Pierre",
+      "largest_city": "Sioux Falls",
+      "population": 886667
+    },
+    {
+      "name": "Tennessee",
+      "abbreviation": "TN",
+      "capital": "Nashville",
+      "largest_city": "Memphis",
+      "population": 6910840
+    },
+    {
+      "name": "Texas",
+      "abbreviation": "TX",
+      "capital": "Austin",
+      "largest_city": "Houston",
+      "population": 29145505
+    },
+    {
+      "name": "Utah",
+      "abbreviation": "UT",
+      "capital": "Salt Lake City",
+      "largest_city": "Salt Lake City",
+      "population": 3271616
+    },
+    {
+      "name": "Vermont",
+      "abbreviation": "VT",
+      "capital": "Montpelier",
+      "largest_city": "Burlington",
+      "population": 643077
+    },
+    {
+      "name": "Virginia",
+      "abbreviation": "VA",
+      "capital": "Richmond",
+      "largest_city": "Virginia Beach",
+      "population": 8631393
+    },
+    {
+      "name": "Washington",
+      "abbreviation": "WA",
+      "capital": "Olympia",
+      "largest_city": "Seattle",
+      "population": 7693612
+    },
+    {
+      "name": "West Virginia",
+      "abbreviation": "WV",
+      "capital": "Charleston",
+      "largest_city": "Charleston",
+      "population": 1793716
+    },
+    {
+      "name": "Wisconsin",
+      "abbreviation": "WI",
+      "capital": "Madison",
+      "largest_city": "Milwaukee",
+      "population": 5893718
+    },
+    {
+      "name": "Wyoming",
+      "abbreviation": "WY",
+      "capital": "Cheyenne",
+      "largest_city": "Cheyenne",
+      "population": 576851
+    }
+  ]
+}
