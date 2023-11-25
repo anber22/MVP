@@ -49,7 +49,25 @@ function Index (){
     }
     setLoading(false)
      // console.log('获取商品列表', products)
-    setData(products.rows)
+     let temp = products.rows.map(item => {
+      item.createDate = getDate(item.createDate)
+      return item
+     })
+    setData(temp)
+  }
+  const appendZero = (obj) => {
+    if (obj < 10) {
+      return '0' + obj
+    } else {
+      return obj
+    }
+  }
+  const getDate = (input) => {
+    let dt = new Date(Number(input + '000'))
+    const y = dt.getFullYear()
+    const m = appendZero((dt.getMonth() + 1).toString())
+    const d = appendZero(dt.getDate().toString())
+    return `${y}-${m}-${d}`
   }
   const createProduct = () => {
     setShowCreateProduct(true)
