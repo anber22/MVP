@@ -7,14 +7,32 @@ import {
   ThunderboltTwoTone,
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme } from 'antd';
+import Router from 'next/router';
 const { Header, Sider, Content } = Layout;
 export default function Template (props) {
   const [collapsed, setCollapsed] = useState(true);
+  function getItem (label, key, icon, children) {
+    return {
+      key,
+      icon,
+      children,
+      label,
+    };
+  }
+  const items = [
+    getItem('My Product', '/', <ShoppingTwoTone />),
+  ];
+  const selectMenu = e => {
+    console.log('eeee', e)
+    Router.push({
+      pathname: e.key, 
+    })
+  }
   // const {
   //   token: { colorBgContainer },
   // } = theme.useToken();
   return (
-    <div>
+    <div className='font-Poppins'>
       <Layout className='layout-box flex grow'>
         <Sider  
           style={{
@@ -37,13 +55,8 @@ export default function Template (props) {
             theme="light"
             mode="inline"
             defaultSelectedKeys={['1']}
-            items={[
-              {
-                key: '1',
-                icon: <ShoppingTwoTone />,
-                label: 'My Product',
-              }
-            ]}
+            items={items}
+            onClick={selectMenu}
           />
         </Sider>
         <Layout style={{ marginLeft: collapsed ? 80 : 200, height: '100vh' }}>

@@ -288,8 +288,8 @@ function Canvas({typeIndex ,actionType, step1, picture}) {
       }
         <div className={'flex ' + (actionType === 'line' ? 'mt-12' : 'mt-5')}>
           {/* <Button className='select-img-btn mr-6' type="primary" onClick={() => selectImg()}>请选择图片</Button> */}
-          <Button className='select-img-btn mr-6' type="primary" onClick={() => clearDraw()}>reset</Button>
-          <Button className='select-img-btn mr-6' type="primary" onClick={() => step1(img.current.src, (actionType === 'dot' ? getPoints() : mask))}>next</Button>
+          <Button className='select-img-btn mr-6' type="primary" onClick={() => clearDraw()}>Reset</Button>
+          <Button className='select-img-btn mr-6' type="primary" onClick={() => step1(img.current.src, (actionType === 'dot' ? getPoints() : mask))}>Next</Button>
         </div>
     </div>
   )

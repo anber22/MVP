@@ -46,7 +46,7 @@ export default function Canvas() {
     }
   }
   return (
-    <div className='flex flex-col login-box' >
+    <div className='flex flex-col login-box font-Poppins' >
       {contextHolder}
       <section className='flex w-full bg-white items-center pl-12 login-header'>
         <img className='w-10 h-10 mr-2' src="/logo-white.png"/>

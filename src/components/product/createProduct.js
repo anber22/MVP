@@ -358,6 +358,7 @@ export default function ChooseDemo({backToList}) {
         "population": 576851
       }
   ]
+  const { TextArea } = Input;
   states = states.map(item => {return {value: item.name, label: item.name}})
   console.log('50', states)
   let [selectImgType, setSelectImgType] = useState(1)
@@ -486,18 +487,6 @@ export default function ChooseDemo({backToList}) {
           <Input />
         </Form.Item>
         <Form.Item
-          label="Shape Description"
-          name="shapeDescription"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your shape description!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
           label="Brand Name"
           name="brandName"
           rules={[
@@ -533,140 +522,151 @@ export default function ChooseDemo({backToList}) {
             ]}
           />
         </Form.Item>
-       
-          <Form.Item label="Photos" >
-            <div className='flex flex-col'>
-              <div className='pt-2'>
-                Would you like to upload your product photos or let 
-                <br/>
-                AIProShots team take photos for your product?
-              </div>
-              <Radio.Group className='mt-2' onChange={changeType} value={selectImgType}>
-                <Space direction="vertical">
-                  <Radio value={1}>Upload my product photos (Faster)</Radio>
-                  <Radio value={2}>AIProShots team takes photos for me (Better Quality, 2-3 Weeks)</Radio>
-                </Space>
-              </Radio.Group>
-            </div>
+        <Form.Item
+          label="Appearance"
+          name="shapeDescription"
+          rules={[
             {
-              selectImgType === 1 ? (
-                <div className='flex mt-2'>
-                  {
-                    selectImgs ? selectImgs.map((item, index) => {
-                      return (<img className='product-img mr-4' key={index} src={item} />)
-                    }) : ''
-                  }
-                  <Button className='mt-4' type="primary" onClick={() => getImg()}>
-                    Browse
-                  </Button>
-                </div>
-              ) : (
-                <div className='border-dashed p-4 mt-2 address-info-box'>
-                  
-                  {`Don't have the perfect photo to upload?`}
-                  <br/>
-                  We will do it for you. Please fill out the form below to send your product to us.
-                  <Form
-                    ref={addressInfo}
-                    className='mt-2'
-                    name="address"
-                    labelCol={{
-                      span: 7
-                    }}
-                    wrapperCol={{
-                      span: 16,
-                    }}
-                    style={{
-                      maxWidth: 600,
-                    }}
-                    initialValues={{
-                      remember: true,
-                    }}
-                    autoComplete="off"
+              required: true,
+              message: 'Please input your shape description!',
+            },
+          ]}
+        >
+           <TextArea rows={3} placeholder="Please input your shape description!" maxLength={150} />
+        </Form.Item>
+        <Form.Item label="Photos" >
+          <div className='flex flex-col'>
+            <div className='pt-2'>
+              Would you like to upload your product photos or let 
+              <br/>
+              AIProShots team take photos for your product?
+            </div>
+            <Radio.Group className='mt-2' onChange={changeType} value={selectImgType}>
+              <Space direction="vertical">
+                <Radio value={1}>Upload my product photos (Faster)</Radio>
+                <Radio value={2}>AIProShots team takes photos for me (Better Quality, 2-3 Weeks)</Radio>
+              </Space>
+            </Radio.Group>
+          </div>
+          {
+            selectImgType === 1 ? (
+              <div className='flex mt-2'>
+                {
+                  selectImgs ? selectImgs.map((item, index) => {
+                    return (<img className='product-img mr-4' key={index} src={item} />)
+                  }) : ''
+                }
+                <Button className='mt-4' type="primary" onClick={() => getImg()}>
+                  Browse
+                </Button>
+              </div>
+            ) : (
+              <div className='border-dashed p-4 mt-2 address-info-box'>
+                
+                {`Don't have the perfect photo to upload?`}
+                <br/>
+                We will do it for you. Please fill out the form below to send your product to us.
+                <Form
+                  ref={addressInfo}
+                  className='mt-2'
+                  name="address"
+                  labelCol={{
+                    span: 7
+                  }}
+                  wrapperCol={{
+                    span: 16,
+                  }}
+                  style={{
+                    maxWidth: 600,
+                  }}
+                  initialValues={{
+                    remember: true,
+                  }}
+                  autoComplete="off"
+                >
+                  <Form.Item
+                    label="Your Name"
+                    name="addressee"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your name!',
+                      },
+                    ]}
                   >
-                    <Form.Item
-                      label="Your Name"
-                      name="addressee"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please input your name!',
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      label="Mobile Phone"
-                      name="mobilePhone"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please input your mobile phone!',
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      label="Address"
-                      name="address"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please input your address!',
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      label="City"
-                      name="city"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please input your city!',
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      label="State"
-                      name="state"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please input your state!',
-                        },
-                      ]}
-                    >
-                      <Select
-                        style={{
-                          width: 220,
-                        }}
-                        options={states}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      label="Zip Code"
-                      name="zipCode"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please input your zipCode!',
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    
-                  </Form>
-                </div>
-              )
-            }
-          </Form.Item>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Mobile Phone"
+                    name="mobilePhone"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your mobile phone!',
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Address"
+                    name="address"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your address!',
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="City"
+                    name="city"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your city!',
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="State"
+                    name="state"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your state!',
+                      },
+                    ]}
+                  >
+                    <Select
+                      style={{
+                        width: 220,
+                      }}
+                      options={states}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    label="Zip Code"
+                    name="zipCode"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your zipCode!',
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  
+                </Form>
+              </div>
+            )
+          }
+        </Form.Item>
         <Form.Item
           wrapperCol={{
             offset: 8,
@@ -674,10 +674,10 @@ export default function ChooseDemo({backToList}) {
           }}
         >
           <Button className='mr-6' type="primary" htmlType="button" onClick={() => goBack(false)}>
-            back
+            Back
           </Button>
           <Button type="primary" htmlType="submit" loading={loading}>
-            next
+            Next
           </Button>
         </Form.Item>
       </Form>

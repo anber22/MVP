@@ -11,6 +11,11 @@ module.exports = {
       'black': '#020617',
       // ...
     },
+    extend: {
+      fontFamily: {
+        sans: ['Poppins']
+      }
+    }
   },
   corePlugins: {
     preflight: false

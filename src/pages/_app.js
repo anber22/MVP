@@ -7,7 +7,7 @@ export default function App({ Component, pageProps }) {
    // console.log('router', router)
   const getRouter = () => {
     if(router.route === '/login'){
-      return <Login/>
+      return <Login />
     }else{
       return (
         <Template>
