@@ -67,7 +67,7 @@ export default function SegmentAnything({getMask, picture, photoId}) {
         },
         body: JSON.stringify(data)
       }
-    ).then((response) => response.json());
+    ).then((response) => response.json(), (rej) => {setLoading(false)});
     setLoading(false)
     const controlMaskRes = await uploadImg(result.masks[1])
     const showMaskRes = await uploadImg(result.blended_images[0])
@@ -121,7 +121,7 @@ export default function SegmentAnything({getMask, picture, photoId}) {
     const data = new FormData()
     var blob = dataURLtoBlob('data:image/png;base64,' + mask);
     const file = blobToFile(blob, 'xxxx');
-    data.append('file', file)
+    data.append('file', file, 'aa.jpg')
     const uploadImg = await fetch(
       "/mvp/ai/product/file",
       {
@@ -155,7 +155,7 @@ export default function SegmentAnything({getMask, picture, photoId}) {
               <QuestionCircleOutlined className='ml-4'/>
             </Popover>
           </div>
-          <Canvas className='flex' actionType={actionType} step1={step1} picture={picture.photoUrl}/>
+          <Canvas className='flex' actionType={actionType} step1={step1} picture={picture.photoUrl} loading={loading}/>
         </div>
         <div className='flex flex-col mt-12 ml-6'>
           {/* <img className='relative hidden result-img mt-14' ref={(ref)=> setEndResult(ref)}/>

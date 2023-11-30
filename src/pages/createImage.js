@@ -21,6 +21,7 @@ function AA (){
   let [sdImg, setSdImg] = useState('')
   let [photoId, setPhotoId] = useState()
   let [showStatus, setShowStatus] = useState(false)
+  let [prompt, setPrompt] = useState('')
   const description = ''
   const onChange = async (value) => {
     // 仅可以回退
@@ -57,6 +58,7 @@ function AA (){
     setShowStatus(true)
   }
   const getMask = async (masks) => {
+    console.log('xxx', masks)
     const photos = await fetch(
       `/mvp/product/photo/${photoId}/mask`,
       {
@@ -135,14 +137,14 @@ function AA (){
         <SegmentAnything getMask={getMask} picture={imgs} photoId={photoId}/>
       </div>
       <div className={ current !== 1 ? 'hidden' : '' }>
-        <HasMask imgs={imgs} masks={maskInfo} gotMjImg={getMjNewImg} backToPrevious={() => backToPrevious()}/>
+        <HasMask imgs={imgs} masks={maskInfo} gotMjImg={getMjNewImg} backToPrevious={() => backToPrevious()} getPrompt={e => {setPrompt(e)}}/>
       </div>
       <div className={ current !== 2 ? 'hidden' : '' }>
         <ChooseDemo imgs={mjImgs} chooseDemo={selectMjImg}/>
       </div>
 
       <div className={'relative' }>
-        {(current !== 3 ? '' : <ControlNet fullMask={(imgs.photoUrl ? imgs.photoUrl : fullMask)} mjImg={mjImg}  getSdImgs={getSdImgs}/>)} 
+        {(current !== 3 ? '' : <ControlNet fullMask={(imgs.photoUrl ? imgs.photoUrl : fullMask)} segmentMask={imgs.maskControlUrl ? imgs.maskControlUrl : fullMask} mjImg={mjImg}  getSdImgs={getSdImgs} prompt={prompt}/>)} 
       </div>
       <div className={'relative' }>
         {(current !== 4 ? '' : <Done imgs={doneGetSdImg} chooseSdImg={chooseSdImg}/>)} 

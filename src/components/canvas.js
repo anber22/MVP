@@ -1,7 +1,7 @@
 import { Button, Slider } from 'antd';
 import {ref, useState, useEffect, useRef} from 'react';
 
-function Canvas({typeIndex ,actionType, step1, picture}) {
+function Canvas({typeIndex ,actionType, step1, picture, loading}) {
   let myInput = null
   let img = useRef()
   let [baseImg, setBaseImg] = useState()
@@ -289,7 +289,7 @@ function Canvas({typeIndex ,actionType, step1, picture}) {
         <div className={'flex ' + (actionType === 'line' ? 'mt-12' : 'mt-5')}>
           {/* <Button className='select-img-btn mr-6' type="primary" onClick={() => selectImg()}>请选择图片</Button> */}
           <Button className='select-img-btn mr-6' type="primary" onClick={() => clearDraw()}>Reset</Button>
-          <Button className='select-img-btn mr-6' type="primary" onClick={() => step1(img.current.src, (actionType === 'dot' ? getPoints() : mask))}>Next</Button>
+          <Button className='select-img-btn mr-6' type="primary" loading={loading} onClick={() => step1(img.current.src, (actionType === 'dot' ? getPoints() : mask))}>Next</Button>
         </div>
     </div>
   )

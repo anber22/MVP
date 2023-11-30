@@ -92,7 +92,7 @@ function Index (){
   }
   const uploadImg = async (file) => {
     const data = new FormData()
-    data.append('file', file)
+    data.append('file', file, 'aa.jpg')
     const uploadImg = await fetch(
       "/mvp/ai/product/file",
       {

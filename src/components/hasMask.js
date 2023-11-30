@@ -4,8 +4,9 @@ import Mj from '@/components/mj';
 import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 
-export default function HasMask({imgs, masks, gotMjImg, backToPrevious}) {
+export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPrompt}) {
   const { TextArea } = Input;
+  let [loading, setLoading] = useState(false)
   const options = [
     {
       value: '0',
@@ -42,12 +43,16 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious}) {
      // console.log('eeee', e)
     setPosition(e)
   }
-  const createMjImgToImg = () => {
-    mj.imgToImg(imgs.photoUrl, options[position].label, description, getMjImg)
+  const createMjImgToImg = async () => {
+    setLoading(true)
+    await mj.imgToImg(imgs.photoUrl, options[position].label, description, getMjImg)
   }
   const getMjImg = e => {
      // console.log('拿到mj的图片', e)
+    setLoading(false)
+
     gotMjImg(e)
+    getPrompt(description)
   }
   const back = () => {
     console.log('返回')
@@ -84,7 +89,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious}) {
           <TextArea className='w-370 mt-4' onChange={e => setDescription(e.target.value)} rows={4} placeholder="on a luxury marble coutertop kitchen island." maxLength={50} />
         <div className='w-full flex mt-4'>
           <Button className='w-36' type="primary" onClick={() => {back()}}>Back</Button>
-          <Button className='w-36 ml-6' type="primary" onClick={() => createMjImgToImg()}>Next</Button>
+          <Button className='w-36 ml-6' type="primary" loading={loading} onClick={() => createMjImgToImg()}>Next</Button>
         </div>
       </div>
     </div>

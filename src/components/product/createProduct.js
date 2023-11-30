@@ -358,6 +358,7 @@ export default function ChooseDemo({backToList}) {
         "population": 576851
       }
   ]
+  
   const { TextArea } = Input;
   states = states.map(item => {return {value: item.name, label: item.name}})
   console.log('50', states)
@@ -418,17 +419,26 @@ export default function ChooseDemo({backToList}) {
     myInput.addEventListener('change', getFile, false)
   }
   const getFile = async e => {
-    const result = await uploadImg(e.target.files[0])
-    let imgs = JSON.parse(JSON.stringify(selectImgs))
-    imgs.push(result)
-    setSelectImgs(imgs)
-    console.log('拿到文件', imgs)
-
-    e.target.value = ''
+    console.log('e.target.files[0]', e.target.files)
+    for(let item of e.target.files){
+      if(item.size / (1024 * 1024) > 1){
+        messageApi.open({
+          type: 'error',
+          content: 'The size of the uploaded image cannot exceed 3M'
+        });
+      } else {
+        const result = await uploadImg(item)
+        let imgs = JSON.parse(JSON.stringify(selectImgs))
+        imgs.push(result)
+        setSelectImgs(imgs)
+        console.log('拿到文件', imgs)
+      }
+    }
+    
   }
   const uploadImg = async (file) => {
     const data = new FormData()
-    data.append('file', file)
+    data.append('file', file, 'aa.jpg')
     const uploadImg = await fetch(
       "/mvp/ai/product/file",
       {
@@ -455,6 +465,7 @@ export default function ChooseDemo({backToList}) {
   }
   return (
     <div className='flex flex-col text-2xl'>
+      {contextHolder}
       Create New Product
       <Form
         className='mt-12'
@@ -681,7 +692,7 @@ export default function ChooseDemo({backToList}) {
           </Button>
         </Form.Item>
       </Form>
-      <input ref={(ref)=>{myInput = ref}} type="file" className='hidden' id="file_input" />
+      <input ref={(ref)=>{myInput = ref}} type="file" className='hidden' id="file_input" multiple/>
     </div>
   )
 }
