@@ -1,10 +1,11 @@
-import { Button, Input, Space, Table, Tag } from 'antd';
+import { Button, Input, Space, Table, Tag, Modal } from 'antd';
 import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 import CreateProduct from '@/components/product/createProduct.js';
 import Router from "next/router"
 import Cookies from 'js-cookie';
 function Index (){
+  const [modal, contextHolder] = Modal.useModal();
   let columns = [
     {
       title: 'Product',
@@ -21,6 +22,12 @@ function Index (){
       title: 'Created Date',
       dataIndex: 'createDate',
       key: 'createDate',
+    },
+    {
+      title: '',
+      dataIndex: 'productId',
+      key: 'productId',
+      render: (productId, productName) => <p className='underline cursor-pointer' onClick={($event) => deleteProduct($event, productId, productName)}>Delete</p>
     }
   ]
   let [curPage, setCurPage] = useState(1)
@@ -77,6 +84,35 @@ function Index (){
     setShowCreateProduct(false)
     if(reload) getProducts()
   }
+  const deleteProduct = async (e, id, product) => {
+    e.stopPropagation() // 阻止冒泡
+    console.log('delete', e, id, product)
+    modal.confirm({
+      title: '',
+      icon: null,
+      centered: true,
+      content: `Delete Product ${product.productName}?`,
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        const delRes = await fetch(
+          `/mvp/ai/product/${id}`,
+          {
+            method: "DELETE",
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': Cookies.get('token')
+            }
+          }
+        ).then((response) => response.json());
+        console.log('res', delRes)
+        if(delRes.code === 200){
+          getProducts()
+        }
+      },
+      onCancel: () => {}
+    })
+  }
   return (
     <div className='flex-grow overflow-y-auto'>
       {showCreateProduct ? (<CreateProduct backToList={(e) => {backToList(e)}}/>)  : (
@@ -108,7 +144,7 @@ function Index (){
           />
         </div>
       )}
-    
+    {contextHolder}
     </div>
     
   )

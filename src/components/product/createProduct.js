@@ -364,6 +364,7 @@ export default function ChooseDemo({backToList}) {
   console.log('50', states)
   let [selectImgType, setSelectImgType] = useState(1)
   let [selectImgs, setSelectImgs] = useState([])
+  let images = []
   const [messageApi, contextHolder] = message.useMessage();
   let [loading, setLoading] = useState(false)
   const categoryChange = e => {
@@ -414,27 +415,37 @@ export default function ChooseDemo({backToList}) {
       goBack(true)
     }
   }
+  let [fileInit, setFileInit] = useState(false)
   const getImg = () => {
     myInput.click()
-    myInput.addEventListener('change', getFile, false)
+    if(!fileInit){
+      myInput.addEventListener('change', getFile, false)
+      setFileInit(true)
+    }
   }
   const getFile = async e => {
-    console.log('e.target.files[0]', e.target.files)
+    console.log('e.target.files[0]', e.target)
     for(let item of e.target.files){
-      if(item.size / (1024 * 1024) > 1){
+      console.log('size', item.size / (1024 * 1024))
+      if((item.size / (1024 * 1024)) > 3){
         messageApi.open({
           type: 'error',
           content: 'The size of the uploaded image cannot exceed 3M'
         });
       } else {
         const result = await uploadImg(item)
-        let imgs = JSON.parse(JSON.stringify(selectImgs))
-        imgs.push(result)
-        setSelectImgs(imgs)
-        console.log('拿到文件', imgs)
+        
+        console.log('拿到文件', images)
+
+        images.push(result)
+        
+        selectImgs = images
+        setSelectImgs(images)
+
+        console.log('拿到文件', images, selectImgs)
       }
     }
-    
+    e.target.value = ''
   }
   const uploadImg = async (file) => {
     const data = new FormData()
@@ -564,7 +575,7 @@ export default function ChooseDemo({backToList}) {
               <div className='flex mt-2'>
                 {
                   selectImgs ? selectImgs.map((item, index) => {
-                    return (<img className='product-img mr-4' key={index} src={item} />)
+                    return <img className='product-img mr-4' key={index} src={item} />
                   }) : ''
                 }
                 <Button className='mt-4' type="primary" onClick={() => getImg()}>
