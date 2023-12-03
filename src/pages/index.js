@@ -92,8 +92,8 @@ function Index (){
       icon: null,
       centered: true,
       content: `Delete Product ${product.productName}?`,
-      okText: '确认',
-      cancelText: '取消',
+      okText: 'Confirm',
+      cancelText: 'Cancel',
       onOk: async () => {
         const delRes = await fetch(
           `/mvp/ai/product/${id}`,
