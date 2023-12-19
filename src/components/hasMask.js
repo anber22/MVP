@@ -60,14 +60,14 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   }
   return (
     <div className='flex content-box'>
-      <div className='w-80 flex flex-col'>
+      {/* <div className='w-80 flex flex-col'>
         <div className='flex h-10 items-center'>
           Your Image
         </div>
         <div className='flex w-full justify-start'>
           <img className='w-9/12 mt-6' src={imgs.photoUrl} />
         </div>
-      </div>
+      </div> */}
       <div className='w-80 flex flex-col'>
         <div className='flex h-10 items-center'>
           Product Selected 
@@ -86,7 +86,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
             onChange={handleChange}
             options={options}
           />
-          <TextArea className='w-370 mt-4' onChange={e => setDescription(e.target.value)} rows={4} placeholder="on a luxury marble coutertop kitchen island." maxLength={50} />
+          <TextArea className='w-370 mt-4' onChange={e => setDescription(e.target.value)} rows={4} placeholder="a luxury marble coutertop kitchen island." maxLength={2000} />
         <div className='w-full flex mt-4'>
           <Button className='w-36' type="primary" onClick={() => {back()}}>Back</Button>
           <Button className='w-36 ml-6' type="primary" loading={loading} onClick={() => createMjImgToImg()}>Next</Button>

@@ -554,7 +554,7 @@ export default function ChooseDemo({backToList}) {
             },
           ]}
         >
-           <TextArea rows={3} placeholder="Please input your shape description!" maxLength={150} />
+           <TextArea rows={3} placeholder="For example: A small brown glass bottle with gold cap" maxLength={150} />
         </Form.Item>
         <Form.Item label="Photos" >
           <div className='flex flex-col'>
@@ -572,13 +572,14 @@ export default function ChooseDemo({backToList}) {
           </div>
           {
             selectImgType === 1 ? (
-              <div className='flex mt-2'>
+              <div className='border-dashed address-info-box flex flex-col p-4 mt-2'>
                 {
                   selectImgs ? selectImgs.map((item, index) => {
                     return <img className='product-img mr-4' key={index} src={item} />
                   }) : ''
                 }
-                <Button className='mt-4' type="primary" onClick={() => getImg()}>
+                You may upload multiple photos at once.
+                <Button className='mt-4 w-20' type="primary" onClick={() => getImg()}>
                   Browse
                 </Button>
               </div>
