@@ -1,5 +1,5 @@
 import { Button, Slider } from 'antd';
-import {ref, useState, useEffect, useRef} from 'react';
+import {ref, useState, useEffect, useRef, use} from 'react';
 
 function Canvas({typeIndex ,actionType, step1, picture, loading}) {
   let myInput = null
@@ -9,8 +9,8 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
   let [mask, setMask] = useState()
   let lineWidth = useRef(20)
 
-  let widthRate = 1
-  let heightRate = 1
+  let widthRate = useRef(1)
+  let heightRate = useRef(1)
   let myDrawing = useRef()
   let myDrawingTemp = useRef()
   const selectImg = () => {
@@ -86,13 +86,42 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
 //         };
 //     });
 // }
+  const get_size = (base64) => {
+    //确认处理的是png格式的数据
+    if (base64.substring(0,22) === 'data:image/png;base64,') {
+        // base64 是用四个字符来表示3个字节
+        // 我们只需要截取base64前32个字符(不计开头那22个字符)便可（24 / 3 * 4）
+        // 这里的data包含12个字符，9个字节，除去第1个字节，后面8个字节就是我们想要的宽度和高度
+        const data = base64.substring(22 + 20, 22 + 32); 
+        const base64Characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+        const nums = [];
+        for (const c of data) {
+            nums.push(base64Characters.indexOf(c));
+        }
+        const bytes = [];
+        for(let i = 0; i < nums.length; i += 4) {
+            bytes.push((nums[i] << 2) + (nums[i+1] >> 4));
+            bytes.push(((nums[i+1] & 15) << 4) + (nums[i+2] >> 2));
+            bytes.push(((nums[i+2] & 3) << 6) + nums[i+3]);
+        }
+        const width = (bytes[1] << 24) + (bytes[2] << 16) + (bytes[3] << 8) + bytes[4];
+        const height = (bytes[5] << 24) + (bytes[6] << 16) + (bytes[7] << 8) + bytes[8];
+        return {
+            width,
+            height,
+        };
+    }
+    // throw Error('unsupported image type');
+  }
   const getFile = e => {
      // console.log('xxxxxxx', myDrawing.current)
     context = myDrawing.current.getContext("2d");
     context.fillStyle = 'blue';
     context.strokeStyle = 'blue'
     context.fillRect(0, 0, myDrawing.current.width, myDrawing.current.height);
-     // console.log('选择文件')
+    console.log('get_size', e)
+
+     console.log('get_size', get_size(e))
 
     myDrawing.current.onmousedown = (e) => {
       painting = true;
@@ -123,36 +152,33 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
     }
     // const fileReader = new FileReader()
     // fileReader.onload = (event) => {
-      //  // console.log(event)
       let image = new Image();
       image.src = e;
       img.current.src = e;
       image.onload = e =>{
+        console.log(e)
         const { width, height } = image;
-         // console.log('图片宽高', width, height)
+         console.log('图片宽高', width, height)
         let targetWidth = 0
         let targetHeight = 0
         if(height > 300){
-
           targetHeight = 300
           targetWidth = width / height * 300
-          heightRate = height / 300
-          widthRate = width / targetWidth
-           // console.log('转换率1', heightRate)
-
+          heightRate.current = height / 300
+          widthRate.current = width / targetWidth
+          console.log('转换率1', height, heightRate)
         }else if(width > 500){
            // console.log('转换率2')
-
           targetWidth = 500
           targetHeight = height / width * 500
-          heightRate = height / targetHeight
-          widthRate = width / 500
+          heightRate.current = height / targetHeight
+          widthRate.current = width / 500
         }else{
            // console.log('转换率3')
           targetWidth = width
           targetHeight = height
         }
-         // console.log('转换率', widthRate, heightRate)
+         console.log('转换率', widthRate.current, heightRate.current)
         img.current.style.width = targetWidth + 'px'
         img.current.style.height = targetHeight + 'px'
         // baseImg.style.width = targetWidth + 'px'
@@ -216,8 +242,11 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
     let temp = JSON.parse(JSON.stringify(points))
      // console.log('使用转换率', widthRate, heightRate)
     temp = temp.map(item => {
-      item[0] = item[0] * widthRate
-      item[1] = item[1] * heightRate
+      console.log('转换打点', item, widthRate.current, heightRate.current)
+      item[0] = item[0] * widthRate.current
+      item[1] = item[1] * heightRate.current
+      console.log('转换打点后', item)
+
       return item
     })
     return temp
@@ -225,8 +254,10 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
   const getMask = async () => {
     var sourceImageData = myDrawing.current.toDataURL("image/png");
     var destCanvasContext = myDrawingTemp.current.getContext('2d');
-    myDrawingTemp.current.width = myDrawing.current.width * widthRate
-    myDrawingTemp.current.height = myDrawing.current.height * heightRate
+    myDrawingTemp.current.width = myDrawing.current.width * widthRate.current
+    myDrawingTemp.current.height = myDrawing.current.height * heightRate.current
+    console.log('比例', widthRate.current, heightRate.current)
+    console.log('宽高', myDrawingTemp.current.width, myDrawingTemp.current.height)
      // console.log('最终结果宽高', heightRate, myDrawingTemp.current.width, myDrawingTemp.current.height)
     var destinationImage = new Image;
     destinationImage.onload = function(){
@@ -234,7 +265,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
       // destCanvasContext.fillStyle = 'black';
       // destCanvasContext.fillRect(0, 0, myDrawingTemp.width, myDrawingTemp.height);
       // destCanvasContext.fillStyle = 'red';
-      destCanvasContext.drawImage(destinationImage,0,0, destinationImage.width * widthRate, destinationImage.height * heightRate);
+      destCanvasContext.drawImage(destinationImage,0,0, destinationImage.width * widthRate.current, destinationImage.height * heightRate.current);
        // console.log('最终结果', myDrawingTemp.current.toDataURL("image/png"), myDrawingTemp.current.width, myDrawingTemp.current.height)
       setMask(myDrawingTemp.current.toDataURL("image/png"))
        // console.log('最终结果-img', mask)

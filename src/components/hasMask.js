@@ -52,7 +52,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
     setLoading(false)
 
     gotMjImg(e)
-    getPrompt(description)
+    getPrompt(options[position].label + ' ' + description)
   }
   const back = () => {
     console.log('返回')

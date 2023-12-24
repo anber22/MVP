@@ -69,8 +69,8 @@ export default function SegmentAnything({getMask, picture, photoId}) {
       }
     ).then((response) => response.json(), (rej) => {setLoading(false)});
     setLoading(false)
-    const controlMaskRes = await uploadImg(result.masks[1])
-    const showMaskRes = await uploadImg(result.blended_images[2])
+    const controlMaskRes = await uploadImg(result.masks[2])
+    const showMaskRes = await uploadImg(result.masked_images[2])
     submitMask(controlMaskRes, showMaskRes)
   }
 

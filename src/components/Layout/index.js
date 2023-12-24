@@ -93,6 +93,5 @@ export default function Template (props) {
         </Layout>
       </Layout>
     </div>
-    
   );
 };

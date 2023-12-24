@@ -52,6 +52,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         "prompt": "",
         "negative_prompt": "",
         "img2img_inpaint_full_res_padding": 0,
+        "inpainting_mask_invert": 0,
         "mode": 2,
         "sampler_index": "Euler a",
         "override_settings": {
@@ -72,11 +73,11 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
                         "module": "canny",
                         "model": "control_sd15_canny [fef5e48e]",
                         "input_image": await urlToBase64(fullMask)
-                    }
+                      }
                 ]
             }
         }
-      }
+    }
       const result = await fetch(
         "api/sdapi/v1/img2img",{
           method: "POST",
@@ -92,7 +93,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         "mask_blur": 0,
         "prompt": prompt,
         "negative_prompt": "",
-        "inpainting_mask_invert": 0,
+        "inpainting_mask_invert": 1,
         "mode": 4,
         "inpainting_fill": 1,
         "sampler_index": "Euler a",
