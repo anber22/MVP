@@ -5,11 +5,11 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://aiproshots-api.uptradeit.com/:path*'
+        destination: 'https://stable-diffsuion.aiproshots.com/:path*'
       },
       {
         source: '/mvp/:path*',
-        destination: 'https://aiproshots-api.uptradeit.com/aiproshots-api/:path*'
+        destination: 'https://back-end-api.aiproshots.com/:path*'
       },
       {
         source: '/img/:path*',
