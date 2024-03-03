@@ -232,7 +232,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
             ]
           }
         },
-        "batch_size": 4,
+        "batch_size": 1,
         "cfg_scale": 7,
         "denoising_strength": 0.75,
         "disable_extra_networks": false,
