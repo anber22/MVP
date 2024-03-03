@@ -87,6 +87,13 @@ main{
   left: 0px;
   top: 0px;
 }
+.canvass-top{
+  height: auto;
+  box-sizing: border-box;
+  z-index: 10;
+  left: 0px;
+  top: 0px;
+}
 .image{
   width: 600px;
   height: 300px;
@@ -248,4 +255,17 @@ main{
 
 .login-let-content{
   font-size: 58px;
+}
+
+
+.resize-handle-ne,
+.resize-handle-se,
+.resize-handle-nw,
+.resize-handle-sw {
+    position: absolute;
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: rgba(222, 60, 80, .9);
+    z-index: 999;
 }

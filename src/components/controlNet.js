@@ -47,39 +47,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
     // await urlToBase64(mjImg.mjPhotoUrl)
     setLoading(true)
     let segmentMaskTemp = await urlToBase64(segmentMask)
-    let data = 
-    //    {
-    //     "mask_blur": 0,
-    //     "prompt": "",
-    //     "negative_prompt": "",
-    //     "img2img_inpaint_full_res_padding": 0,
-    //     "inpainting_mask_invert": 0,
-    //     "mode": 2,
-    //     "sampler_index": "Euler a",
-    //     "override_settings": {
-    //         "sd_model_checkpoint": "realisticVisionV51_v51VAE.safetensors [15012c538f]"
-    //     },
-    //     "override_settings_restore_afterwards": true,
-    //     "init_images": [
-    //       await urlToBase64(mjImg.mjPhotoUrl)
-    //     ],
-    //     "mask": mask,
-    //     "sampler_name": "Euler",
-    //     "width": 512,
-    //     "height": 512,
-    //     "alwayson_scripts": {
-    //         "controlnet": {
-    //             "args": [
-    //                 {
-    //                     "module": "canny",
-    //                     "model": "control_sd15_canny [fef5e48e]",
-    //                     "input_image": await urlToBase64(fullMask)
-    //                   }
-    //             ]
-    //         }
-    //     }
-    // }
-      {
+    let data = {
         "alwayson_scripts": {
           "Extra options": {
               "args": []
@@ -264,13 +232,13 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
             ]
           }
         },
-        "batch_size": 1,
+        "batch_size": 4,
         "cfg_scale": 7,
         "denoising_strength": 0.75,
         "disable_extra_networks": false,
         "do_not_save_grid": false,
         "do_not_save_samples": false,
-        "height": 512,
+        "height": 1024,
         "image_cfg_scale": 1.5,
         "init_images": [
           await urlToBase64(fullMask)
@@ -307,9 +275,9 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         "subseed": -1,
         "subseed_strength": 0,
         "tiling": false,
-        "width": 512
+        "width": 1024
       }
-      setTimeout(async ()=>{
+      try {
         const result2 = await fetch(
           "/api/sdapi/v1/img2img",{
             method: "POST",
@@ -326,11 +294,13 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
           return item
         })
         setLoading(false)
-         // console.log('抠图结果', result, result2.images)
+          // console.log('抠图结果', result, result2.images)
         getSdImgs(result2.images)
-      },10000)
-     
-    // console.log('执行第二步', img, mask)
+      } catch (error) {
+        setLoading(false)
+      }
+      
+      
   }
   const selectImg = () => {
     myInput.click()
@@ -345,7 +315,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
       <div>
         Mask the product to let AI replace it with your product.
       </div>
-      <Canvas actionType={actionType} step1={step1} picture={mjImg.mjPhotoUrl} loading={loading} />
+      <Canvas actionType={actionType} step1={step1} picture={mjImg.mjPhotoUrl} loading={loading} productPic={ urlToBase64(fullMask) }/>
       <input ref={(ref)=>{myInput = ref}} type="file" className='hidden' id="file_input" />
       <div className='flex flex-col control-net-box mt-2'>
         {/* <Button className='select-img-btn mr-6' type="primary" onClick={() => selectImg()}>请选择图片</Button> */}

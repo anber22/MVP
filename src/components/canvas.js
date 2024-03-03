@@ -1,22 +1,29 @@
 import { Button, Slider } from 'antd';
 import {ref, useState, useEffect, useRef, use} from 'react';
 
-function Canvas({typeIndex ,actionType, step1, picture, loading}) {
+function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
   let myInput = null
   let img = useRef()
   let [baseImg, setBaseImg] = useState()
   let [controlNetImg, setControlNetImg] = useState()
   let [mask, setMask] = useState()
   let lineWidth = useRef(20)
+  let scale = useRef(100)
 
   let widthRate = useRef(1)
   let heightRate = useRef(1)
   let myDrawing = useRef()
+  let myDrawingTop = useRef()
   let myDrawingTemp = useRef()
+  let [startPoint, setStartPoint] = useState()
+  let [endPointX, setEndPointX] = useState()
+  let [endPointY, setEndPointY] = useState()
+  let [isAdjust, setIsAdjust] = useState(false)
   const selectImg = () => {
     myInput.click()
     myInput.addEventListener('change', getFile, false)
   }
+  let [destCanvasContext, setDestCanvasContext] = useState()
   useEffect( () => {
     // selectImg()
     async function aa(){
@@ -197,6 +204,18 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
     lineWidth.current = value
      // console.log('粗细', value, lineWidth.current)
   }
+  const scaleChange = async (value) =>{
+    scale.current = value
+    let proImg = new Image;
+    proImg.onload = function() {
+      let size = myDrawing.current.width * (scale.current / 100)
+      console.log('rate', size, endPointX)
+      destCanvasContext.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
+      destCanvasContext.drawImage(proImg, endPointX || endPointX === 0 ? (endPointX - size / 2) : 0, endPointY || endPointY === 0 ? (endPointY - size / 2) : 0, size, size);
+      destCanvasContext.globalAlpha = 0.6
+    }
+    proImg.src = await productPic
+  }
   const drawDot = (x, y) => {
      // console.log('画点', points)
     if(points.length === 5){
@@ -209,7 +228,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
     context.beginPath()
     context.arc(x, y, 5, 0, Math.PI * 2);
     context.closePath()
-    context.fillStyle = 'black';
+    context.drawImage = 'black';
     // 执行“填充”操作
     context.fill();
   }
@@ -253,7 +272,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
   }
   const getMask = async () => {
     var sourceImageData = myDrawing.current.toDataURL("image/png");
-    var destCanvasContext = myDrawingTemp.current.getContext('2d');
+    destCanvasContext = myDrawingTemp.current.getContext('2d');
     myDrawingTemp.current.width = myDrawing.current.width * widthRate.current
     myDrawingTemp.current.height = myDrawing.current.height * heightRate.current
     console.log('比例', widthRate.current, heightRate.current)
@@ -266,21 +285,21 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
       // destCanvasContext.fillRect(0, 0, myDrawingTemp.width, myDrawingTemp.height);
       // destCanvasContext.fillStyle = 'red';
       destCanvasContext.drawImage(destinationImage,0,0, destinationImage.width * widthRate.current, destinationImage.height * heightRate.current);
-       // console.log('最终结果', myDrawingTemp.current.toDataURL("image/png"), myDrawingTemp.current.width, myDrawingTemp.current.height)
+      // console.log('最终结果', myDrawingTemp.current.toDataURL("image/png"), myDrawingTemp.current.width, myDrawingTemp.current.height)
       setMask(myDrawingTemp.current.toDataURL("image/png"))
-       // console.log('最终结果-img', mask)
+      // console.log('最终结果-img', mask)
 
     };
     destinationImage.src = sourceImageData;
   }
   const drawLine = (x1, y1, x2, y2) => {
-     // console.log('绘制线条', context)
+    // console.log('绘制线条', context)
     context.fillStyle = 'red';
     context.strokeStyle = 'rgba(255,255,255,1)';
 
     context.beginPath();
     context.lineWidth = lineWidth.current;
-     // console.log('检查笔触', context.lineWidth, lineWidth.current)
+    // console.log('检查笔触', context.lineWidth, lineWidth.current)
     // 设置线条末端样式。
     context.lineCap = "round";
 
@@ -301,29 +320,100 @@ function Canvas({typeIndex ,actionType, step1, picture, loading}) {
     context.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
     setMask(myDrawing.current.toDataURL("image/png"))
   }
+  const adjustTarget = async () => {
+    let proImg = new Image;
+    destCanvasContext = myDrawingTop.current.getContext('2d')
+    setDestCanvasContext(myDrawingTop.current.getContext('2d'))
+    proImg.onload = function() {
+      console.log('canvas', widthRate.current, heightRate.current)
+      myDrawingTop.current.width = myDrawing.current.width
+      myDrawingTop.current.height = myDrawing.current.height
+      destCanvasContext.globalAlpha = 0.8
+      destCanvasContext.drawImage(proImg, 0, 0, myDrawing.current.width, myDrawing.current.height);
+     
+      let imgWight = 300
+      let imgHeight = 300
+      myDrawingTop.current.onmousedown = (e) => {
+        painting = true;
+        const {x, y} = getXY(myDrawingTop.current, e)
+        setStartPoint({'x': x,'y': y})
+      }
+      // 鼠标移动事件
+      myDrawingTop.current.onmousemove = (e) => {
+        const {x, y} = getXY(myDrawingTop.current, e)
+        if(!painting){return}
+        setEndPointX(x);
+        setEndPointY(y);
+        console.log('position', endPointY, endPointX, x,y)
+        console.log('wh', myDrawingTop.current.width, myDrawingTop.current.height)
+        let size = myDrawing.current.width * (scale.current / 100)
+        destCanvasContext.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
+        destCanvasContext.drawImage(proImg, x - size / 2, y - size / 2, size, size);
+        destCanvasContext.globalAlpha = 0.6
+      }
+      // 鼠标松开事件
+      myDrawingTop.current.onmouseup = async () => {
+        console.log('onmouseup')
+        painting = false;
+       
+        // if(startPoint.x < endPoint.x){
+        //   let rate = 1 + ((endPoint.x - startPoint.x) / 300)
+        //   console.log('rate', rate)
+        //   imgWight = imgWight * rate
+        //   imgHeight = imgHeight * rate
+        //   destCanvasContext.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
+        //   if(imgWight >= myDrawing.current.width){
+        //     destCanvasContext.drawImage(proImg, 0, 0, myDrawing.current.width, myDrawing.current.height);
+        //   }else{
+        //     destCanvasContext.drawImage(proImg, 0, 0, imgWight, imgHeight);
+        //   }
+        //   destCanvasContext.globalAlpha = 0.8
+        // }else if(startPoint.x > endPoint.x){
+        //   let rate = 1 - ((startPoint.x - endPoint.x) / 300)
+        //   console.log('rate', rate)
+        //   imgWight = imgWight * rate
+        //   imgHeight = imgHeight * rate
+        //   destCanvasContext.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
+        //   destCanvasContext.drawImage(proImg, 0, 0, imgWight, imgHeight);
+        //   destCanvasContext.globalAlpha = 0.8
+        // }
+      }
+    }
+    proImg.src = await productPic
+  }
   return (
     <div className='flex flex-col' >
-    
       <div className='mt-6 canvas-box'>
         <input ref={(ref)=>{myInput = ref}} type="file" className='hidden' id="file_input" />
         <img ref={img} className='image' />
         <canvas ref={myDrawing} className='canvass absolute'>A drawing of something</canvas>
+        {
+          isAdjust ? 
+            <canvas ref={myDrawingTop} className='canvass-top absolute'>A drawing of something</canvas>
+          : ""
+        }
         <canvas ref={myDrawingTemp} className='hidden'></canvas>
       </div>
       { actionType === 'line' ?  
         <div className='line-width-slider mt-8'>
           {/* line width */}
-          <Slider min={5} max={100} defaultValue={20} onChange={lineWidthChange} />
+          {
+            isAdjust ? 
+            (<Slider min={5} max={100} defaultValue={100} onChange={scaleChange} />) : 
+            (<Slider min={5} max={100} defaultValue={20} onChange={lineWidthChange} />)
+          }
         </div>
         : ''
       }
         <div className={'flex ' + (actionType === 'line' ? 'mt-12' : 'mt-5')}>
           {/* <Button className='select-img-btn mr-6' type="primary" onClick={() => selectImg()}>请选择图片</Button> */}
           <Button className='select-img-btn mr-6' type="primary" onClick={() => clearDraw()}>Reset</Button>
+          <Button className='select-img-btn mr-6' type="primary" onClick={() => adjustTarget()}>Adjust</Button>
           <Button className='select-img-btn mr-6' type="primary" loading={loading} onClick={() => step1(img.current.src, (actionType === 'dot' ? getPoints() : mask))}>Next</Button>
         </div>
     </div>
   )
+ 
 }
 export default function Paint({...props}){
   return <Canvas {...props}/>
