@@ -1,10 +1,6 @@
 {
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "https://stable-diffsuion.aiproshots.com/$1"
-    },
-    {
       "src": "/mvp/(.*)",
       "dest": "https://back-end-api.aiproshots.com/$1"
     },
