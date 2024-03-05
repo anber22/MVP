@@ -288,33 +288,33 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
       // })
       // .then(res => console.log(res))
       // .catch(err => console.error(err));
-      const response = await axios.post('/api/sdapi/v1/img2img', data2, {
-        timeout: 300000, // 设置超时时间为30秒
-      });
+      // const response = await axios.post('/api/sdapi/v1/img2img', data2, {
+      //   timeout: 300000, // 设置超时时间为30秒
+      // });
   
-      // try {
-      //   const result2 = await fetch(
-      //     "/api/sdapi/v1/img2img",{
-      //       method: "POST",
-      //       headers: {
-      //         'Content-Type': 'application/json',
+      try {
+        const result2 = await fetch(
+          "/api/sdapi/v1/img2img",{
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
               
-      //       },
-      //       timeout: 300000,
-      //       credentials:'include',
-      //       body: JSON.stringify(data2)
-      //     }
-      //   ).then((response) => response.json(), (rej) => {setLoading(false)});
-      //   result2.images = result2.images.map(item => {
-      //     item = 'data:image/png;base64,' + item
-      //     return item
-      //   })
-      //   setLoading(false)
-      //     // console.log('抠图结果', result, result2.images)
-      //   getSdImgs(result2.images)
-      // } catch (error) {
-      //   setLoading(false)
-      // }
+            },
+            timeout: 300000,
+            credentials:'include',
+            body: JSON.stringify(data2)
+          }
+        ).then((response) => response.json(), (rej) => {setLoading(false)});
+        result2.images = result2.images.map(item => {
+          item = 'data:image/png;base64,' + item
+          return item
+        })
+        setLoading(false)
+          // console.log('抠图结果', result, result2.images)
+        getSdImgs(result2.images)
+      } catch (error) {
+        setLoading(false)
+      }
       
       
   }
