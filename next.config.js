@@ -4,10 +4,6 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'https://stable-diffsuion.aiproshots.com/:path*'
-      },
-      {
         source: '/mvp/:path*',
         destination: 'https://back-end-api.aiproshots.com/:path*'
       },
