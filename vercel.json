@@ -1,6 +1,10 @@
 {
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "https://back-end-api.aiproshots.com/api/$1"
+    },
+    {
       "src": "/mvp/(.*)",
       "dest": "https://back-end-api.aiproshots.com/$1"
     },
