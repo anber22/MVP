@@ -18,7 +18,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
   let [startPoint, setStartPoint] = useState()
   let [endPointX, setEndPointX] = useState()
   let [endPointY, setEndPointY] = useState()
-  let [isAdjust, setIsAdjust] = useState(false)
+  let isAdjust = useRef(false)
   const selectImg = () => {
     myInput.click()
     myInput.addEventListener('change', getFile, false)
@@ -321,6 +321,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
     setMask(myDrawing.current.toDataURL("image/png"))
   }
   const adjustTarget = async () => {
+    isAdjust.current = true
     let proImg = new Image;
     destCanvasContext = myDrawingTop.current.getContext('2d')
     setDestCanvasContext(myDrawingTop.current.getContext('2d'))
@@ -388,7 +389,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
         <img ref={img} className='image' />
         <canvas ref={myDrawing} className='canvass absolute'>A drawing of something</canvas>
         {
-          isAdjust ? 
+          isAdjust.current ? 
             <canvas ref={myDrawingTop} className='canvass-top absolute'>A drawing of something</canvas>
           : ""
         }
@@ -398,7 +399,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
         <div className='line-width-slider mt-8'>
           {/* line width */}
           {
-            isAdjust ? 
+            isAdjust.current ? 
             (<Slider min={5} max={100} defaultValue={100} onChange={scaleChange} />) : 
             (<Slider min={5} max={100} defaultValue={20} onChange={lineWidthChange} />)
           }
