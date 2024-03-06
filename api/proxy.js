@@ -22,8 +22,8 @@ module.exports = (req, res) => {
     createProxyMiddleware({
         target,
         proxy: {
-          timeout: 480000, // 自己想要的时间
-          proxyTimeout: 480000,
+          timeout: 300000, // 自己想要的时间
+          proxyTimeout: 300000,
 
         },
         changeOrigin: true,
