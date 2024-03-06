@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://stable-diffsuion.aiproshots.com/:path*"
+      "destination": "https://stable-diffsuion.aiproshots.com/api/:path*"
     },
     {
       "source": "/mvp/:path*",
