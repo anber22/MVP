@@ -1,16 +1,16 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/:match*",
-      "destination": "https://stable-diffsuion.aiproshots.com/:match*"
+      "src": "/api/(.*)",
+      "dest": "https://stable-diffsuion.aiproshots.com/$1"
     },
     {
-      "source": "/mvp/:match*",
-      "destination": "https://back-end-api.aiproshots.com/:match*"
+      "src": "/mvp/(.*)",
+      "dest": "https://back-end-api.aiproshots.com/$1"
     },
     {
-      "source": "/img/:match*",
-      "destination": "https://aiproshots-image.s3.amazonaws.com/:match*"
+      "source": "/img/(.*)",
+      "destination": "https://aiproshots-image.s3.amazonaws.com/$1"
     }
   ],
   "headers": [
