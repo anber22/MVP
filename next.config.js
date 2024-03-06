@@ -19,6 +19,9 @@ const nextConfig = {
   },
   serverRuntimeConfig: {
     maxDuration: 300000, // 设置超时时间为60秒
+  },
+  experimental: {
+    proxyTimeout: 1000 * 300,
   }
 }
 
