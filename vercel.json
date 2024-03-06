@@ -2,6 +2,9 @@
   "routes": [
     {
       "src": "/api/(.*)",
+      "headers": {
+        "timeout": "300000"
+      },
       "dest": "https://stable-diffsuion.aiproshots.com/$1"
     },
     {
