@@ -3,7 +3,7 @@
     {
       "src": "/api/(.*)",
       "headers": {
-        "Timeout": "300000"
+        "timeout": "300000"
       },
       "dest": "https://stable-diffsuion.aiproshots.com/$1"
     },
