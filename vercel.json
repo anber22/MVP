@@ -13,7 +13,15 @@
       "destination": "https://aiproshots-image.s3.amazonaws.com/:match*"
     }
   ],
-  "experimental": {
-    "proxyTimeout": 300000
-  }
+  "headers": [
+    {
+      "source": "/api/:path*",
+      "headers": [
+        {
+          "key": "timeout",
+          "value": 300000
+        }
+      ]
+    }
+  ]
 }
