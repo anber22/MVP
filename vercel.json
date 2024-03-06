@@ -6,11 +6,11 @@
     },
     {
       "source": "/mvp/:match*",
-      "destination": "https: //back-end-api.aiproshots.com/:match*"
+      "destination": "https://back-end-api.aiproshots.com/:match*"
     },
     {
       "source": "/img/:match*",
-      "destination": "https: //aiproshots-image.s3.amazonaws.com/:match*"
+      "destination": "https://aiproshots-image.s3.amazonaws.com/:match*"
     }
   ]
 }
