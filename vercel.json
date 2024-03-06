@@ -12,5 +12,8 @@
       "source": "/img/:match*",
       "destination": "https://aiproshots-image.s3.amazonaws.com/:match*"
     }
-  ]
+  ],
+  "experimental": {
+    "proxyTimeout": 300000
+  }
 }
