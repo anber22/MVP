@@ -15,16 +15,5 @@
       "src": "/img/(.*)",
       "dest": "https://aiproshots-image.s3.amazonaws.com/$1"
     }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Timeout",
-          "value": "30"
-        }
-      ]
-    }
   ]
 }
