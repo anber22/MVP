@@ -9,8 +9,8 @@
       "dest": "https://back-end-api.aiproshots.com/$1"
     },
     {
-      "source": "/img/(.*)",
-      "destination": "https://aiproshots-image.s3.amazonaws.com/$1"
+      "src": "/img/(.*)",
+      "dest": "https://aiproshots-image.s3.amazonaws.com/$1"
     }
   ],
   "headers": [
