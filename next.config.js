@@ -5,7 +5,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://stable-diffsuion.aiproshots.com/api/:path*'
+        destination: 'http://47.89.150.214:7860/:path*'
       },
       {
         source: '/mvp/:path*',

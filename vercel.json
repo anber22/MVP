@@ -2,7 +2,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://stable-diffsuion.aiproshots.com/api/$1"
+      "dest": "http://47.89.150.214:7860/$1"
     },
     {
       "src": "/mvp/(.*)",
