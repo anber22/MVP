@@ -6,11 +6,11 @@
     },
     {
       "source": "/mvp/(.*)",
-      "destination": "/api/proxy"
+      "destination": "https://back-end-api.aiproshots.com/$1"
     },
     {
       "source": "/img/(.*)",
-      "destination": "/api/proxy"
+      "destination": "https://aiproshots-image.s3.amazonaws.com/$1"
     }
   ]
 }
