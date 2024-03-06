@@ -21,6 +21,11 @@ module.exports = (req, res) => {
     // 创建代理对象并转发请求
     createProxyMiddleware({
         target,
+        proxy: {
+          timeout: 480000, // 自己想要的时间
+          proxyTimeout: 480000,
+
+        },
         changeOrigin: true,
         pathRewrite: rewrite
     })(req, res)
