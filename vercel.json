@@ -2,14 +2,10 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://stable-diffsuion.aiproshots.com/$1",
-      "methods": [
-        "GET",
-        "POST"
-      ],
-      "options": {
-        "timeout": 300
-      }
+      "headers": {
+        "timeout": "300000"
+      },
+      "dest": "https://stable-diffsuion.aiproshots.com/$1"
     },
     {
       "src": "/mvp/(.*)",

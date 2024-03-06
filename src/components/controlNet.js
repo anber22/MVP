@@ -251,7 +251,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
             method: "POST",
             headers: {
               'Content-Type': 'application/json',
-              
+              'Timeout': 300000
             },
             timeout: 300000,
             credentials:'include',
