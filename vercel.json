@@ -19,7 +19,7 @@
       "headers": [
         {
           "key": "timeout",
-          "value": 300000
+          "value": "300000"
         }
       ]
     }
