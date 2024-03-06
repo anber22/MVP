@@ -1,9 +1,14 @@
 {
+  "functions": {
+    "api/*": {
+      "maxDuration": 300
+    }
+  },
   "routes": [
     {
       "src": "/api/(.*)",
       "headers": {
-        "timeout": "300000"
+        "Timeout": "300000"
       },
       "dest": "https://stable-diffsuion.aiproshots.com/$1"
     },
