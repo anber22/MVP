@@ -3,7 +3,7 @@
     {
       "src": "/api/(.*)",
       "headers": {
-        "timeout": "300000"
+        "Timeout": "300000"
       },
       "dest": "https://stable-diffsuion.aiproshots.com/$1"
     },
@@ -14,6 +14,17 @@
     {
       "src": "/img/(.*)",
       "dest": "https://aiproshots-image.s3.amazonaws.com/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Timeout",
+          "value": "30"
+        }
+      ]
     }
   ]
 }
