@@ -1,9 +1,11 @@
 {
+  "functions": {
+    "/api/proxy.js": {
+      "memory": 3009,
+      "maxDuration": 300
+    }
+  },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/proxy"
-    },
     {
       "source": "/mvp/(.*)",
       "destination": "https://back-end-api.aiproshots.com/$1"
