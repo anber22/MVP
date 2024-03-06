@@ -1,27 +1,16 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/:path*",
-      "destination": "https://stable-diffsuion.aiproshots.com/api/:path*"
+      "src": "/api/(.*)",
+      "dest": "https://stable-diffsuion.aiproshots.com/$1"
     },
     {
-      "source": "/mvp/:path*",
-      "destination": "https://back-end-api.aiproshots.com/:path*"
+      "src": "/mvp/(.*)",
+      "dest": "https://back-end-api.aiproshots.com/$1"
     },
     {
-      "source": "/img/:path*",
-      "destination": "https://aiproshots-image.s3.amazonaws.com/:path*"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/:path*",
-      "headers": [
-        {
-          "key": "timeout",
-          "value": "300000"
-        }
-      ]
+      "src": "/img/(.*)",
+      "dest": "https://aiproshots-image.s3.amazonaws.com/$1"
     }
   ]
 }
