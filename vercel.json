@@ -5,12 +5,12 @@
       "destination": "https://stable-diffsuion.aiproshots.com/:match*"
     },
     {
-      "source": "/mvp/:path*",
-      "destination": "https: //back-end-api.aiproshots.com/:path*"
+      "source": "/mvp/:match*",
+      "destination": "https: //back-end-api.aiproshots.com/:match*"
     },
     {
-      "source": "/img/:path*",
-      "destination": "https: //aiproshots-image.s3.amazonaws.com/:path*"
+      "source": "/img/:match*",
+      "destination": "https: //aiproshots-image.s3.amazonaws.com/:match*"
     }
   ]
 }
