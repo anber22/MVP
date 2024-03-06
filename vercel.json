@@ -1,24 +1,16 @@
 {
-  "functions": {
-    "api/*": {
-      "maxDuration": 300
-    }
-  },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "headers": {
-        "Timeout": "300000"
-      },
-      "dest": "https://stable-diffsuion.aiproshots.com/$1"
+      "source": "/api/(.*)",
+      "destination": "/api/proxy"
     },
     {
-      "src": "/mvp/(.*)",
-      "dest": "https://back-end-api.aiproshots.com/$1"
+      "source": "/mvp/(.*)",
+      "destination": "/api/proxy"
     },
     {
-      "src": "/img/(.*)",
-      "dest": "https://aiproshots-image.s3.amazonaws.com/$1"
+      "source": "/img/(.*)",
+      "destination": "/api/proxy"
     }
   ]
 }
