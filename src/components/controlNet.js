@@ -244,21 +244,6 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         "tiling": false,
         "width": 1024
       }
-      // const fetchInstance = fetchcc.defaults({timeout: 30000});
-      // const response = fetchInstance( "/api/sdapi/v1/img2img",{
-      //   method: "POST",
-      //   headers: {
-      //     'Content-Type': 'application/json',
-          
-      //   },
-      //   credentials:'include',
-      //   body: JSON.stringify(data2)
-      // })
-      // .then(res => console.log(res))
-      // .catch(err => console.error(err));
-      // const response = await axios.post('/api/sdapi/v1/img2img', data2, {
-      //   timeout: 300000, // 设置超时时间为30秒
-      // });
   
       try {
         const result2 = await fetch(
