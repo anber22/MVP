@@ -3,19 +3,5 @@
     "api/proxy.js": {
       "maxDuration": 300
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "api/proxy"
-    },
-    {
-      "source": "/mvp/(.*)",
-      "destination": "https://back-end-api.aiproshots.com/$1"
-    },
-    {
-      "source": "/img/(.*)",
-      "destination": "https://aiproshots-image.s3.amazonaws.com/$1"
-    }
-  ]
+  }
 }
