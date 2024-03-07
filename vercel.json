@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/app/proxy"
+      "destination": "app/proxy"
     },
     {
       "source": "/mvp/(.*)",
@@ -14,7 +14,7 @@
     }
   ],
   "functions": {
-    "/api/proxy.js": {
+    "api/proxy.js": {
       "maxDuration": 300
     }
   }
