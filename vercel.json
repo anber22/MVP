@@ -14,7 +14,7 @@
     }
   ],
   "functions": {
-    "api/proxy.js": {
+    "/api/proxy.js": {
       "maxDuration": 300
     }
   }
