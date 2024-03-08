@@ -18,7 +18,8 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
   let [startPoint, setStartPoint] = useState()
   let [endPointX, setEndPointX] = useState()
   let [endPointY, setEndPointY] = useState()
-  let isAdjust = useRef(false)
+  // let isAdjust = useRef(false)
+  let [isAdjust, setIsAdjust] = useState(false)
   const selectImg = () => {
     myInput.click()
     myInput.addEventListener('change', getFile, false)
@@ -321,66 +322,71 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
     setMask(myDrawing.current.toDataURL("image/png"))
   }
   const adjustTarget = async () => {
-    isAdjust.current = true
+    // isAdjust.current = true
+    isAdjust = true
+    setIsAdjust(true)
     let proImg = new Image;
-    destCanvasContext = myDrawingTop.current.getContext('2d')
-    setDestCanvasContext(myDrawingTop.current.getContext('2d'))
-    proImg.onload = function() {
-      console.log('canvas', widthRate.current, heightRate.current)
-      myDrawingTop.current.width = myDrawing.current.width
-      myDrawingTop.current.height = myDrawing.current.height
-      destCanvasContext.globalAlpha = 0.8
-      destCanvasContext.drawImage(proImg, 0, 0, myDrawing.current.width, myDrawing.current.height);
-     
-      let imgWight = 300
-      let imgHeight = 300
-      myDrawingTop.current.onmousedown = (e) => {
-        painting = true;
-        const {x, y} = getXY(myDrawingTop.current, e)
-        setStartPoint({'x': x,'y': y})
-      }
-      // 鼠标移动事件
-      myDrawingTop.current.onmousemove = (e) => {
-        const {x, y} = getXY(myDrawingTop.current, e)
-        if(!painting){return}
-        setEndPointX(x);
-        setEndPointY(y);
-        console.log('position', endPointY, endPointX, x,y)
-        console.log('wh', myDrawingTop.current.width, myDrawingTop.current.height)
-        let size = myDrawing.current.width * (scale.current / 100)
-        destCanvasContext.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
-        destCanvasContext.drawImage(proImg, x - size / 2, y - size / 2, size, size);
-        destCanvasContext.globalAlpha = 0.6
-      }
-      // 鼠标松开事件
-      myDrawingTop.current.onmouseup = async () => {
-        console.log('onmouseup')
-        painting = false;
+    setTimeout(async () => {
+      destCanvasContext = myDrawingTop.current.getContext('2d')
+      setDestCanvasContext(myDrawingTop.current.getContext('2d'))
+      proImg.onload = function() {
+        console.log('canvas', widthRate.current, heightRate.current)
+        myDrawingTop.current.width = myDrawing.current.width
+        myDrawingTop.current.height = myDrawing.current.height
+        destCanvasContext.globalAlpha = 0.8
+        destCanvasContext.drawImage(proImg, 0, 0, myDrawing.current.width, myDrawing.current.height);
        
-        // if(startPoint.x < endPoint.x){
-        //   let rate = 1 + ((endPoint.x - startPoint.x) / 300)
-        //   console.log('rate', rate)
-        //   imgWight = imgWight * rate
-        //   imgHeight = imgHeight * rate
-        //   destCanvasContext.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
-        //   if(imgWight >= myDrawing.current.width){
-        //     destCanvasContext.drawImage(proImg, 0, 0, myDrawing.current.width, myDrawing.current.height);
-        //   }else{
-        //     destCanvasContext.drawImage(proImg, 0, 0, imgWight, imgHeight);
-        //   }
-        //   destCanvasContext.globalAlpha = 0.8
-        // }else if(startPoint.x > endPoint.x){
-        //   let rate = 1 - ((startPoint.x - endPoint.x) / 300)
-        //   console.log('rate', rate)
-        //   imgWight = imgWight * rate
-        //   imgHeight = imgHeight * rate
-        //   destCanvasContext.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
-        //   destCanvasContext.drawImage(proImg, 0, 0, imgWight, imgHeight);
-        //   destCanvasContext.globalAlpha = 0.8
-        // }
+        let imgWight = 300
+        let imgHeight = 300
+        myDrawingTop.current.onmousedown = (e) => {
+          painting = true;
+          const {x, y} = getXY(myDrawingTop.current, e)
+          setStartPoint({'x': x,'y': y})
+        }
+        // 鼠标移动事件
+        myDrawingTop.current.onmousemove = (e) => {
+          const {x, y} = getXY(myDrawingTop.current, e)
+          if(!painting){return}
+          setEndPointX(x);
+          setEndPointY(y);
+          console.log('position', endPointY, endPointX, x,y)
+          console.log('wh', myDrawingTop.current.width, myDrawingTop.current.height)
+          let size = myDrawing.current.width * (scale.current / 100)
+          destCanvasContext.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
+          destCanvasContext.drawImage(proImg, x - size / 2, y - size / 2, size, size);
+          destCanvasContext.globalAlpha = 0.6
+        }
+        // 鼠标松开事件
+        myDrawingTop.current.onmouseup = async () => {
+          console.log('onmouseup')
+          painting = false;
+         
+          // if(startPoint.x < endPoint.x){
+          //   let rate = 1 + ((endPoint.x - startPoint.x) / 300)
+          //   console.log('rate', rate)
+          //   imgWight = imgWight * rate
+          //   imgHeight = imgHeight * rate
+          //   destCanvasContext.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
+          //   if(imgWight >= myDrawing.current.width){
+          //     destCanvasContext.drawImage(proImg, 0, 0, myDrawing.current.width, myDrawing.current.height);
+          //   }else{
+          //     destCanvasContext.drawImage(proImg, 0, 0, imgWight, imgHeight);
+          //   }
+          //   destCanvasContext.globalAlpha = 0.8
+          // }else if(startPoint.x > endPoint.x){
+          //   let rate = 1 - ((startPoint.x - endPoint.x) / 300)
+          //   console.log('rate', rate)
+          //   imgWight = imgWight * rate
+          //   imgHeight = imgHeight * rate
+          //   destCanvasContext.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
+          //   destCanvasContext.drawImage(proImg, 0, 0, imgWight, imgHeight);
+          //   destCanvasContext.globalAlpha = 0.8
+          // }
+        }
       }
-    }
-    proImg.src = await productPic
+      proImg.src = await productPic
+    }, 500);
+
   }
   return (
     <div className='flex flex-col' >
@@ -389,7 +395,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
         <img ref={img} className='image' />
         <canvas ref={myDrawing} className='canvass absolute'>A drawing of something</canvas>
         {
-          isAdjust.current ? 
+          isAdjust ? 
             <canvas ref={myDrawingTop} className='canvass-top absolute'>A drawing of something</canvas>
           : ""
         }
@@ -399,7 +405,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
         <div className='line-width-slider mt-8'>
           {/* line width */}
           {
-            isAdjust.current ? 
+            isAdjust ? 
             (<Slider min={5} max={100} defaultValue={100} onChange={scaleChange} />) : 
             (<Slider min={5} max={100} defaultValue={20} onChange={lineWidthChange} />)
           }
@@ -410,7 +416,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
           {/* <Button className='select-img-btn mr-6' type="primary" onClick={() => selectImg()}>请选择图片</Button> */}
           <Button className='select-img-btn mr-6' type="primary" onClick={() => clearDraw()}>Reset</Button>
           <Button className='select-img-btn mr-6' type="primary" onClick={() => adjustTarget()}>Adjust</Button>
-          <Button className='select-img-btn mr-6' type="primary" loading={loading} onClick={() => step1(img.current.src, (actionType === 'dot' ? getPoints() : mask))}>Next</Button>
+          <Button className='select-img-btn mr-6' type="primary" loading={loading} onClick={() => step1(img.current.src, (actionType === 'dot' ? getPoints() : mask), (isAdjust ? {scale, endPointX, endPointY} : false))}>Next</Button>
         </div>
     </div>
   )

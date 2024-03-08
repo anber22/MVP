@@ -3,6 +3,7 @@ import {ref, useState, useEffect, useRef} from 'react';
 import Canvas from '@/components/canvas';
 import fetchcc from 'node-fetch';
 import axios from 'axios'
+import Cookies from 'js-cookie';
 export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, prompt}) {
   const actionType = 'line'
   let myInput = null
@@ -43,8 +44,17 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
       };
     });
   }
-  const step1 = async (img, mask) => {
+  const step1 = async (img, mask, adjust) => {
     // await urlToBase64(mjImg.mjPhotoUrl)
+    let timer1 = null
+    console.log(adjust)
+
+
+
+
+
+
+
     setLoading(true)
     let segmentMaskTemp = await urlToBase64(segmentMask)
     let data = {
@@ -143,133 +153,279 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         "tiling": false,
         "width": 512
       }
-      const result = await fetch(
-        "/api/sdapi/v1/img2img",{
+      let result = await fetch(
+        "/mvp/ai/product/photo/1/sd/img2img/control-net/1",{
           method: "POST",
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': Cookies.get('token')
           },
           body: JSON.stringify(data)
         }
       ).then((response) => response.json(), (rej) => {setLoading(false)});
-      endResult.src = 'data:image/png;base64,' + result.images[0]
-       // console.log('xxx', fullMask)
-      let data2 =      {
-        "alwayson_scripts": {
-          "controlnet": {
-            "args": [
-              {
-                "batch_images": "",
-                "control_mode": "Balanced",
-                "enabled": true,
-                "guidance_end": 1,
-                "guidance_start": 0,
-                "input_image": endResult.src,
-                "input_mode": "simple",
-                "is_ui": true,
-                "loopback": false,
-                "low_vram": false,
-                "model": "control_sd15_canny [fef5e48e]",
-                "module": "canny",
-                "output_dir": "",
-                "pixel_perfect": true,
-                "processor_res": 512,
-                "resize_mode": "Crop and Resize",
-                "threshold_a": 50,
-                "threshold_b": 200,
-                "weight": 1
+      let lock = false
+      if(timer1) clearInterval(timer1)
+      timer1 = setInterval(async()=>{
+        if(lock) return
+        let result1 = await getResult(result.data.taskId);
+        if(result1.code === 200 && result1.data.progressBar === 100 && !lock){
+          lock = true
+          clearInterval(timer1)
+          console.log('首次进来', timer1)
+
+          endResult.src = 'data:image/png;base64,' + result1.data.resultStr.images[0]
+          // console.log('xxx', fullMask)
+          let data2 =      {
+            "alwayson_scripts": {
+              "controlnet": {
+                "args": [
+                  {
+                    "batch_images": "",
+                    "control_mode": "Balanced",
+                    "enabled": true,
+                    "guidance_end": 1,
+                    "guidance_start": 0,
+                    "input_image": endResult.src,
+                    "input_mode": "simple",
+                    "is_ui": true,
+                    "loopback": false,
+                    "low_vram": false,
+                    "model": "control_sd15_canny [fef5e48e]",
+                    "module": "canny",
+                    "output_dir": "",
+                    "pixel_perfect": true,
+                    "processor_res": 512,
+                    "resize_mode": "Crop and Resize",
+                    "threshold_a": 50,
+                    "threshold_b": 200,
+                    "weight": 1
+                  }
+                ]
+              },
+              "Refiner": {
+                  "args": [
+                      false,
+                      "",
+                      0.8
+                  ]
+              },
+              "Seed": {
+                "args": [
+                    -1,
+                    false,
+                    -1,
+                    0,
+                    0,
+                    0
+                ]
               }
-            ]
-          },
-          "Refiner": {
-              "args": [
-                  false,
-                  "",
-                  0.8
-              ]
-          },
-          "Seed": {
-            "args": [
-                -1,
-                false,
-                -1,
-                0,
-                0,
-                0
-            ]
-          }
-        },
-        "batch_size": 4,
-        "cfg_scale": 7,
-        "denoising_strength": 0.75,
-        "disable_extra_networks": false,
-        "do_not_save_grid": false,
-        "do_not_save_samples": false,
-        "height": 1024,
-        "image_cfg_scale": 1.5,
-        "init_images": [
-          await urlToBase64(fullMask)
-        ],
-        "mask": segmentMaskTemp,
-        "initial_noise_multiplier": 1,
-        "inpaint_full_res": 0,
-        "inpaint_full_res_padding": 32,
-        "inpainting_fill": 1,
-        "inpainting_mask_invert": 1,
-        "mask_blur": 0,
-        "mask_blur_x": 0,
-        "mask_blur_y": 0,
-        "n_iter": 1,
-        "negative_prompt": "(deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime:1.4), text, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, BadDream, UnrealisticDream",
-        "override_settings": {
-          "sd_model_checkpoint": "realisticVisionV51_v51VAE.safetensors [15012c538f]"
-        },
-        "override_settings_restore_afterwards": true,
-        "prompt": prompt,
-        "resize_mode": 0,
-        "restore_faces": false,
-        "s_churn": 0,
-        "s_min_uncond": 0,
-        "s_noise": 1,
-        
-        "s_tmin": 0,
-        "sampler_name": "DPM++ SDE Karras",
-        "seed": -1,
-        "seed_enable_extras": true,
-        "seed_resize_from_h": -1,
-        "seed_resize_from_w": -1,
-        "steps": 30,
-        "subseed": -1,
-        "subseed_strength": 0,
-        "tiling": false,
-        "width": 1024
-      }
-  
-      try {
-        const result2 = await fetch(
-          "/api/sdapi/v1/img2img",{
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/json',
-              'Timeout': 300000
             },
-            timeout: 300000,
-            credentials:'include',
-            body: JSON.stringify(data2)
+            "batch_size": 4,
+            "cfg_scale": 7,
+            "denoising_strength": 0.75,
+            "disable_extra_networks": false,
+            "do_not_save_grid": false,
+            "do_not_save_samples": false,
+            "height": 1024,
+            "image_cfg_scale": 1.5,
+            "init_images": [
+              await urlToBase64(fullMask)
+            ],
+            "mask": segmentMaskTemp,
+            "initial_noise_multiplier": 1,
+            "inpaint_full_res": 0,
+            "inpaint_full_res_padding": 32,
+            "inpainting_fill": 1,
+            "inpainting_mask_invert": 1,
+            "mask_blur": 0,
+            "mask_blur_x": 0,
+            "mask_blur_y": 0,
+            "n_iter": 1,
+            "negative_prompt": "(deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime:1.4), text, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, BadDream, UnrealisticDream",
+            "override_settings": {
+              "sd_model_checkpoint": "realisticVisionV51_v51VAE.safetensors [15012c538f]"
+            },
+            "override_settings_restore_afterwards": true,
+            "prompt": prompt,
+            "resize_mode": 0,
+            "restore_faces": false,
+            "s_churn": 0,
+            "s_min_uncond": 0,
+            "s_noise": 1,
+            
+            "s_tmin": 0,
+            "sampler_name": "DPM++ SDE Karras",
+            "seed": -1,
+            "seed_enable_extras": true,
+            "seed_resize_from_h": -1,
+            "seed_resize_from_w": -1,
+            "steps": 30,
+            "subseed": -1,
+            "subseed_strength": 0,
+            "tiling": false,
+            "width": 1024
           }
-        ).then((response) => response.json(), (rej) => {setLoading(false)});
-        result2.images = result2.images.map(item => {
-          item = 'data:image/png;base64,' + item
-          return item
-        })
-        setLoading(false)
-          // console.log('抠图结果', result, result2.images)
-        getSdImgs(result2.images)
-      } catch (error) {
-        setLoading(false)
+          let lock2 = false
+         try {
+           let result2 = await fetch(
+             "/mvp/ai/product/photo/1/sd/img2img/control-net/2",{
+               method: "POST",
+               headers: {
+                'Content-Type': 'application/json',
+                'Authorization': Cookies.get('token')
+               },
+               body: JSON.stringify(data2)
+             }
+           ).then((response) => response.json(), (rej) => {setLoading(false)});
+           lock2 = false
+            timer1 = setInterval(async()=>{
+              if(lock2) return
+              let result3 = await getResult(result2.data.taskId);
+              if(result3.code === 200 && result3.data.progressBar === 100 && !lock2){
+                lock2 = true
+                clearInterval(timer1)
+                result3.data.resultStr.images = result3.data.resultStr.images.map(item => {
+                  item = 'data:image/png;base64,' + item
+                  return item
+                })
+                setLoading(false)
+                  // console.log('抠图结果', result, result3.images)
+                getSdImgs(result3.data.resultStr.images)
+              }
+            }, 10000)
+         } catch (error) {
+           setLoading(false)
+         }
+        }
+      }, 10000)
+      
+      // endResult.src = 'data:image/png;base64,' + result.images[0]
+      //  // console.log('xxx', fullMask)
+      // let data2 =      {
+      //   "alwayson_scripts": {
+      //     "controlnet": {
+      //       "args": [
+      //         {
+      //           "batch_images": "",
+      //           "control_mode": "Balanced",
+      //           "enabled": true,
+      //           "guidance_end": 1,
+      //           "guidance_start": 0,
+      //           "input_image": endResult.src,
+      //           "input_mode": "simple",
+      //           "is_ui": true,
+      //           "loopback": false,
+      //           "low_vram": false,
+      //           "model": "control_sd15_canny [fef5e48e]",
+      //           "module": "canny",
+      //           "output_dir": "",
+      //           "pixel_perfect": true,
+      //           "processor_res": 512,
+      //           "resize_mode": "Crop and Resize",
+      //           "threshold_a": 50,
+      //           "threshold_b": 200,
+      //           "weight": 1
+      //         }
+      //       ]
+      //     },
+      //     "Refiner": {
+      //         "args": [
+      //             false,
+      //             "",
+      //             0.8
+      //         ]
+      //     },
+      //     "Seed": {
+      //       "args": [
+      //           -1,
+      //           false,
+      //           -1,
+      //           0,
+      //           0,
+      //           0
+      //       ]
+      //     }
+      //   },
+      //   "batch_size": 4,
+      //   "cfg_scale": 7,
+      //   "denoising_strength": 0.75,
+      //   "disable_extra_networks": false,
+      //   "do_not_save_grid": false,
+      //   "do_not_save_samples": false,
+      //   "height": 1024,
+      //   "image_cfg_scale": 1.5,
+      //   "init_images": [
+      //     await urlToBase64(fullMask)
+      //   ],
+      //   "mask": segmentMaskTemp,
+      //   "initial_noise_multiplier": 1,
+      //   "inpaint_full_res": 0,
+      //   "inpaint_full_res_padding": 32,
+      //   "inpainting_fill": 1,
+      //   "inpainting_mask_invert": 1,
+      //   "mask_blur": 0,
+      //   "mask_blur_x": 0,
+      //   "mask_blur_y": 0,
+      //   "n_iter": 1,
+      //   "negative_prompt": "(deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime:1.4), text, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, BadDream, UnrealisticDream",
+      //   "override_settings": {
+      //     "sd_model_checkpoint": "realisticVisionV51_v51VAE.safetensors [15012c538f]"
+      //   },
+      //   "override_settings_restore_afterwards": true,
+      //   "prompt": prompt,
+      //   "resize_mode": 0,
+      //   "restore_faces": false,
+      //   "s_churn": 0,
+      //   "s_min_uncond": 0,
+      //   "s_noise": 1,
+        
+      //   "s_tmin": 0,
+      //   "sampler_name": "DPM++ SDE Karras",
+      //   "seed": -1,
+      //   "seed_enable_extras": true,
+      //   "seed_resize_from_h": -1,
+      //   "seed_resize_from_w": -1,
+      //   "steps": 30,
+      //   "subseed": -1,
+      //   "subseed_strength": 0,
+      //   "tiling": false,
+      //   "width": 1024
+      // }
+      // try {
+      //   const result2 = await fetch(
+      //     "/api/sdapi/v1/img2img",{
+      //       method: "POST",
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //         'Timeout': 300000
+      //       },
+      //       timeout: 300000,
+      //       credentials:'include',
+      //       body: JSON.stringify(data2)
+      //     }
+      //   ).then((response) => response.json(), (rej) => {setLoading(false)});
+      //   result2.images = result2.images.map(item => {
+      //     item = 'data:image/png;base64,' + item
+      //     return item
+      //   })
+      //   setLoading(false)
+      //     // console.log('抠图结果', result, result2.images)
+      //   getSdImgs(result2.images)
+      // } catch (error) {
+      //   setLoading(false)
+      // }
+  }
+  const getResult = async (taskId) => {
+    const result = await fetch(
+      `/mvp/ai/product/photo/sd/task/${taskId}`,{
+        method: "get",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': Cookies.get('token')
+        }
       }
-      
-      
+    ).then((response) => response.json(), (rej) => {setLoading(false)});
+    return result
   }
   const selectImg = () => {
     myInput.click()
