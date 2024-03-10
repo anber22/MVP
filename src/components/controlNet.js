@@ -368,7 +368,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         Mask the product to let AI replace it with your product.
       </div>
 
-      <Canvass actionType={actionType} step1={step1} picture={mjImg.mjPhotoUrl} loading={loading} productPic={ urlToBase64(fullMask) }/>
+      <Canvass actionType={actionType} step1={step1} picture={mjImg.mjPhotoUrl} loading={loading} productPic={ urlToBase64(imgs.maskShowUrl) }/>
       <input ref={(ref)=>{myInput = ref}} type="file" className='hidden' id="file_input" />
       <div className='flex flex-col control-net-box mt-2'>
         {/* <Button className='select-img-btn mr-6' type="primary" onClick={() => selectImg()}>请选择图片</Button> */}
@@ -378,7 +378,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         </div>
 
       </div>
-      <canvas id='scale-canvas' ref={scaleDrawing} >xxxxx</canvas>
+      <canvas id='scale-canvas' ref={scaleDrawing} className='hidden' >xxxxx</canvas>
 
     </div>
   )
