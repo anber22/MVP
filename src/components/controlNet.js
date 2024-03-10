@@ -1,17 +1,22 @@
 import { Button, Slider } from 'antd';
 import {ref, useState, useEffect, useRef} from 'react';
-import Canvas from '@/components/canvas';
+import Canvass from '@/components/canvas';
 import fetchcc from 'node-fetch';
 import axios from 'axios'
 import Cookies from 'js-cookie';
-export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, prompt}) {
+export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, prompt, imgs}) {
   const actionType = 'line'
   let myInput = null
   let [endResult, setEndResult] = useState()
   // let [controlNetImg, setControlNetImg] = useState('')
   let [controlNetImg, setControlNetImg] = useState('')
   let [loading, setLoading] = useState(false)
+  let scaleDrawing = useRef()
+  let [scaleState, setScaleState] = useState()
   useEffect( () => {
+    setScaleState(scaleDrawing)
+    // scaleState = scaleDrawing
+    console.log('初始化', scaleDrawing, scaleState)
     console.log('进入最后一步', fullMask, mjImg, segmentMask)
     console.log('ControlNet', prompt)
     urlToBase64(mjImg.mjPhotoUrl)
@@ -44,12 +49,49 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
       };
     });
   }
+  const myElement = document.getElementById('scale-canvas');
+  const scaleImg = async (img, adjust, isBlack) => {
+    console.log('img', scaleState, scaleDrawing)
+    let image = new Image();
+    setScaleState(scaleDrawing)
+    
+    console.log('元素', document, myElement)
+    let scaleContext = myElement.getContext('2d');
+    console.log('scaleContext', scaleContext)
+    let promise = new Promise((resolve)=>{
+      image.onload = () => {
+        console.log('onload', scaleState, scaleDrawing)
+        myElement.width = image.width;
+        myElement.height = image.height;
+        if(isBlack){
+          scaleContext.rect(0,0,image.width,image.height);
+          scaleContext.fillStyle="black";
+          scaleContext.fill();
+        }
+        
+        scaleContext.drawImage(image, (adjust.endPointX / 300 * image.width) - (image.width * (adjust.scale.current / 100) / 2) , (adjust.endPointY / 300 * image.height) - (image.height * (adjust.scale.current / 100) / 2), image.width * (adjust.scale.current / 100), image.height * (adjust.scale.current / 100));
+        resolve(myElement.toDataURL("image/png"));
+      }
+    })
+    image.src = await urlToBase64(img);
+    return promise
+  }
   const step1 = async (img, mask, adjust) => {
     // await urlToBase64(mjImg.mjPhotoUrl)
+    let res1 = await urlToBase64(segmentMask)
+    let res2 = await urlToBase64(imgs.maskShowUrl)
+    if(adjust){
+      console.log(adjust)
+      console.log('xxxx', scaleDrawing.current.getContext('2d'))
+      // let img1 = await urlToBase64(segmentMask)
+      res1 = await scaleImg(segmentMask, adjust, scaleDrawing)
+      console.log('缩放结果', res1)
+      let img2 = await urlToBase64(imgs.maskShowUrl)
+      res2 = await scaleImg(imgs.maskShowUrl, adjust)
+      console.log('缩放结果', res2)
+    }
+    
     let timer1 = null
-    console.log(adjust)
-
-
 
 
 
@@ -77,7 +119,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
                   "enabled": true,
                   "guidance_end": 1,
                   "guidance_start": 0,
-                  "input_image": await urlToBase64(fullMask),
+                  "input_image": res2,
                   "input_mode": "simple",
                   "is_ui": true,
                   "loopback": false,
@@ -229,9 +271,9 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
             "height": 1024,
             "image_cfg_scale": 1.5,
             "init_images": [
-              await urlToBase64(fullMask)
+              res2
             ],
-            "mask": segmentMaskTemp,
+            "mask": res1,
             "initial_noise_multiplier": 1,
             "inpaint_full_res": 0,
             "inpaint_full_res_padding": 32,
@@ -291,6 +333,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
                 setLoading(false)
                   // console.log('抠图结果', result, result3.images)
                 getSdImgs(result3.data.resultStr.images)
+                clearInterval(timer1)
               }
             }, 10000)
          } catch (error) {
@@ -298,122 +341,6 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
          }
         }
       }, 10000)
-      
-      // endResult.src = 'data:image/png;base64,' + result.images[0]
-      //  // console.log('xxx', fullMask)
-      // let data2 =      {
-      //   "alwayson_scripts": {
-      //     "controlnet": {
-      //       "args": [
-      //         {
-      //           "batch_images": "",
-      //           "control_mode": "Balanced",
-      //           "enabled": true,
-      //           "guidance_end": 1,
-      //           "guidance_start": 0,
-      //           "input_image": endResult.src,
-      //           "input_mode": "simple",
-      //           "is_ui": true,
-      //           "loopback": false,
-      //           "low_vram": false,
-      //           "model": "control_sd15_canny [fef5e48e]",
-      //           "module": "canny",
-      //           "output_dir": "",
-      //           "pixel_perfect": true,
-      //           "processor_res": 512,
-      //           "resize_mode": "Crop and Resize",
-      //           "threshold_a": 50,
-      //           "threshold_b": 200,
-      //           "weight": 1
-      //         }
-      //       ]
-      //     },
-      //     "Refiner": {
-      //         "args": [
-      //             false,
-      //             "",
-      //             0.8
-      //         ]
-      //     },
-      //     "Seed": {
-      //       "args": [
-      //           -1,
-      //           false,
-      //           -1,
-      //           0,
-      //           0,
-      //           0
-      //       ]
-      //     }
-      //   },
-      //   "batch_size": 4,
-      //   "cfg_scale": 7,
-      //   "denoising_strength": 0.75,
-      //   "disable_extra_networks": false,
-      //   "do_not_save_grid": false,
-      //   "do_not_save_samples": false,
-      //   "height": 1024,
-      //   "image_cfg_scale": 1.5,
-      //   "init_images": [
-      //     await urlToBase64(fullMask)
-      //   ],
-      //   "mask": segmentMaskTemp,
-      //   "initial_noise_multiplier": 1,
-      //   "inpaint_full_res": 0,
-      //   "inpaint_full_res_padding": 32,
-      //   "inpainting_fill": 1,
-      //   "inpainting_mask_invert": 1,
-      //   "mask_blur": 0,
-      //   "mask_blur_x": 0,
-      //   "mask_blur_y": 0,
-      //   "n_iter": 1,
-      //   "negative_prompt": "(deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime:1.4), text, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, BadDream, UnrealisticDream",
-      //   "override_settings": {
-      //     "sd_model_checkpoint": "realisticVisionV51_v51VAE.safetensors [15012c538f]"
-      //   },
-      //   "override_settings_restore_afterwards": true,
-      //   "prompt": prompt,
-      //   "resize_mode": 0,
-      //   "restore_faces": false,
-      //   "s_churn": 0,
-      //   "s_min_uncond": 0,
-      //   "s_noise": 1,
-        
-      //   "s_tmin": 0,
-      //   "sampler_name": "DPM++ SDE Karras",
-      //   "seed": -1,
-      //   "seed_enable_extras": true,
-      //   "seed_resize_from_h": -1,
-      //   "seed_resize_from_w": -1,
-      //   "steps": 30,
-      //   "subseed": -1,
-      //   "subseed_strength": 0,
-      //   "tiling": false,
-      //   "width": 1024
-      // }
-      // try {
-      //   const result2 = await fetch(
-      //     "/api/sdapi/v1/img2img",{
-      //       method: "POST",
-      //       headers: {
-      //         'Content-Type': 'application/json',
-      //         'Timeout': 300000
-      //       },
-      //       timeout: 300000,
-      //       credentials:'include',
-      //       body: JSON.stringify(data2)
-      //     }
-      //   ).then((response) => response.json(), (rej) => {setLoading(false)});
-      //   result2.images = result2.images.map(item => {
-      //     item = 'data:image/png;base64,' + item
-      //     return item
-      //   })
-      //   setLoading(false)
-      //     // console.log('抠图结果', result, result2.images)
-      //   getSdImgs(result2.images)
-      // } catch (error) {
-      //   setLoading(false)
-      // }
   }
   const getResult = async (taskId) => {
     const result = await fetch(
@@ -440,7 +367,8 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
       <div>
         Mask the product to let AI replace it with your product.
       </div>
-      <Canvas actionType={actionType} step1={step1} picture={mjImg.mjPhotoUrl} loading={loading} productPic={ urlToBase64(fullMask) }/>
+
+      <Canvass actionType={actionType} step1={step1} picture={mjImg.mjPhotoUrl} loading={loading} productPic={ urlToBase64(fullMask) }/>
       <input ref={(ref)=>{myInput = ref}} type="file" className='hidden' id="file_input" />
       <div className='flex flex-col control-net-box mt-2'>
         {/* <Button className='select-img-btn mr-6' type="primary" onClick={() => selectImg()}>请选择图片</Button> */}
@@ -448,7 +376,10 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
           {/* <img className='control-net-img' ref={controlNetImg} /> */}
           <img className='relative result-img ml-6' ref={(ref)=> setEndResult(ref)}/>
         </div>
+
       </div>
+      <canvas id='scale-canvas' ref={scaleDrawing} >xxxxx</canvas>
+
     </div>
   )
 }

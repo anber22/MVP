@@ -324,7 +324,10 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
   const adjustTarget = async () => {
     // isAdjust.current = true
     isAdjust = true
+
     setIsAdjust(true)
+    scale.current = 100
+    
     let proImg = new Image;
     setTimeout(async () => {
       destCanvasContext = myDrawingTop.current.getContext('2d')

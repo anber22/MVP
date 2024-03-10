@@ -144,7 +144,7 @@ function AA (){
       </div>
 
       <div className={'relative' }>
-        {(current !== 3 ? '' : <ControlNet fullMask={(imgs.photoUrl ? imgs.photoUrl : fullMask)} segmentMask={imgs.maskControlUrl ? imgs.maskControlUrl : fullMask} mjImg={mjImg}  getSdImgs={getSdImgs} prompt={prompt}/>)} 
+        {(current !== 3 ? '' : <ControlNet fullMask={(imgs.photoUrl ? imgs.photoUrl : fullMask)} segmentMask={imgs.maskControlUrl ? imgs.maskControlUrl : fullMask} mjImg={mjImg}  getSdImgs={getSdImgs} prompt={prompt} imgs={imgs}/>)} 
       </div>
       <div className={'relative' }>
         {(current !== 4 ? '' : <Done imgs={doneGetSdImg} chooseSdImg={chooseSdImg}/>)} 
