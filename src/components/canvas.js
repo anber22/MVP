@@ -316,10 +316,10 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
     if(points.length > 0){
       points.length = 0
     }
-     // console.log(context)
     if(!context) return
     context.clearRect(0, 0, myDrawing.current.width, myDrawing.current.height);
     setMask(myDrawing.current.toDataURL("image/png"))
+    
   }
   const adjustTarget = async () => {
     // isAdjust.current = true
@@ -407,18 +407,20 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
       { actionType === 'line' ?  
         <div className='line-width-slider mt-8'>
           {/* line width */}
-          {
-            isAdjust ? 
-            (<Slider min={5} max={100} defaultValue={100} onChange={scaleChange} />) : 
-            (<Slider min={5} max={100} defaultValue={20} onChange={lineWidthChange} />)
-          }
+            <Slider min={5} style={{display:( isAdjust ? '' : 'none')}} max={100} defaultValue={100} onChange={scaleChange} /> 
+            <Slider min={5} style={{display:( !isAdjust ? '' : 'none')}} max={100} defaultValue={20} onChange={lineWidthChange} />
         </div>
         : ''
       }
         <div className={'flex ' + (actionType === 'line' ? 'mt-12' : 'mt-5')}>
           {/* <Button className='select-img-btn mr-6' type="primary" onClick={() => selectImg()}>请选择图片</Button> */}
           <Button className='select-img-btn mr-6' type="primary" onClick={() => clearDraw()}>Reset</Button>
-          <Button className='select-img-btn mr-6' type="primary" onClick={() => adjustTarget()}>Adjust</Button>
+          {
+            actionType === 'line' ? 
+            (<Button className='select-img-btn mr-6' type="primary" onClick={() => adjustTarget()}>Adjust</Button>)
+            : ''
+          }
+          
           <Button className='select-img-btn mr-6' type="primary" loading={loading} onClick={() => step1(img.current.src, (actionType === 'dot' ? getPoints() : mask), (isAdjust ? {scale, endPointX, endPointY} : false))}>Next</Button>
         </div>
     </div>

@@ -43,14 +43,14 @@ export default function SegmentAnything({getMask, picture, photoId}) {
   );
   const step1 = async (img, points) => {
     setLoading(true)
-    const reviewsResponse = await fetch(
-      "api/sam/heartbeat"
-    ).then((response) => response.json());
-    const samModels = await fetch(
-      "api/sam/sam-model"
-    ).then((response) => response.json());
+    // const reviewsResponse = await fetch(
+    //   "api/sam/heartbeat"
+    // ).then((response) => response.json());
+    // const samModels = await fetch(
+    //   "api/sam/sam-model"
+    // ).then((response) => response.json());
     let data = {
-      "sam_model_name": samModels[0],
+      "sam_model_name": 'sam_vit_h_4b8939.pth',
       "input_image": img,
       "sam_positive_points": points,
       "dino_enabled": false,
@@ -59,21 +59,43 @@ export default function SegmentAnything({getMask, picture, photoId}) {
       "dino_preview_checkbox": false
     }
     const result = await fetch(
-      "api/sam/sam-predict",
+      "/mvp/ai/product/photo/1/sd/img2img/control-net/0",
       {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': Cookies.get('token')
         },
         body: JSON.stringify(data)
       }
     ).then((response) => response.json(), (rej) => {setLoading(false)});
-    setLoading(false)
-    const controlMaskRes = await uploadImg(result.masks[2])
-    const showMaskRes = await uploadImg(result.masked_images[2])
-    submitMask(controlMaskRes, showMaskRes)
-  }
+    let lock = false
+    let timer1 = setInterval(async()=>{
+      let result1 = await getResult(result.data.taskId);
+      if(result1.code === 200 && result1.data.progressBar === 100 && !lock){
+        lock = true
+        clearInterval(timer1)
+        setLoading(false)
+        const controlMaskRes = await uploadImg(result1.data.resultStr.masks[2])
+        const showMaskRes = await uploadImg(result1.data.resultStr.masked_images[2])
+        submitMask(controlMaskRes, showMaskRes)
+      }
+    }, 3000)
+   
 
+  }
+  const getResult = async (taskId) => {
+    const result = await fetch(
+      `/mvp/ai/product/photo/sd/task/${taskId}`,{
+        method: "get",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': Cookies.get('token')
+        }
+      }
+    ).then((response) => response.json(), (rej) => {setLoading(false)});
+    return result
+  }
   const dataURLtoBlob = (dataurl) => { 
     var arr = dataurl.split(','),
     mime = arr[0].match(/:(.*?);/)[1],

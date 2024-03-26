@@ -13,6 +13,8 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
   let [loading, setLoading] = useState(false)
   let scaleDrawing = useRef()
   let [scaleState, setScaleState] = useState()
+  let timer1 = null
+
   useEffect( () => {
     setScaleState(scaleDrawing)
     // scaleState = scaleDrawing
@@ -20,7 +22,11 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
     console.log('进入最后一步', fullMask, mjImg, segmentMask)
     console.log('ControlNet', prompt)
     urlToBase64(mjImg.mjPhotoUrl)
+    window.addEventListener("beforeunload",  (e) => {
+      clearInterval(timer1)
+    })
   }, [])
+  
   const urlToBase64 = async (url) =>  {
     let file = ''
     await fetch('/img' + url.replace('https://aiproshots-image.s3.amazonaws.com', ''))
@@ -91,7 +97,6 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
       console.log('缩放结果', res2)
     }
     
-    let timer1 = null
 
 
 
@@ -124,7 +129,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
                   "is_ui": true,
                   "loopback": false,
                   "low_vram": false,
-                  "model": "control_sd15_canny [fef5e48e]",
+                  "model": "control_v11p_sd15_canny [d14c016b]",
                   "module": "canny",
                   "output_dir": "",
                   "pixel_perfect": false,
@@ -171,7 +176,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         "n_iter": 1,
         "negative_prompt": "",
         "override_settings": {
-          "sd_model_checkpoint": "realisticVisionV51_v51VAE.safetensors [15012c538f]"
+          "sd_model_checkpoint": "realisticVisionV60B1_v51VAE.safetensors.ckpt [139ac005d4]"
         },
         "override_settings_restore_afterwards": true,
         "prompt": "",
@@ -232,11 +237,11 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
                     "is_ui": true,
                     "loopback": false,
                     "low_vram": false,
-                    "model": "control_sd15_canny [fef5e48e]",
+                    "model": "control_v11p_sd15_canny [d14c016b]",
                     "module": "canny",
                     "output_dir": "",
                     "pixel_perfect": true,
-                    "processor_res": 512,
+                    "processor_res": 1024,
                     "resize_mode": "Crop and Resize",
                     "threshold_a": 50,
                     "threshold_b": 200,
@@ -285,7 +290,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
             "n_iter": 1,
             "negative_prompt": "(deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime:1.4), text, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, BadDream, UnrealisticDream",
             "override_settings": {
-              "sd_model_checkpoint": "realisticVisionV51_v51VAE.safetensors [15012c538f]"
+              "sd_model_checkpoint": "realisticVisionV60B1_v51VAE.safetensors.ckpt [139ac005d4]"
             },
             "override_settings_restore_afterwards": true,
             "prompt": prompt,
