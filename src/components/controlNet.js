@@ -1,4 +1,4 @@
-import { Button, Slider } from 'antd';
+import { Button, Slider, Modal, Progress } from 'antd';
 import {ref, useState, useEffect, useRef} from 'react';
 import Canvass from '@/components/canvas';
 import fetchcc from 'node-fetch';
@@ -13,14 +13,18 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
   let [loading, setLoading] = useState(false)
   let scaleDrawing = useRef()
   let [scaleState, setScaleState] = useState()
+  let [openLoading, setOpenLoading] = useState(false)
+  let [showLoading, setShowLoading] = useState(false)
+  let loadingStep = useRef(0)
+  let schedule = useRef(0)
+  let [schedule1, setSchedule1] = useState(0)
+  let [schedule2, setSchedule2] = useState(0)
+  let [schedule3, setSchedule3] = useState(0)
   let timer1 = null
 
   useEffect( () => {
     setScaleState(scaleDrawing)
     // scaleState = scaleDrawing
-    console.log('初始化', scaleDrawing, scaleState)
-    console.log('进入最后一步', fullMask, mjImg, segmentMask)
-    console.log('ControlNet', prompt)
     urlToBase64(mjImg.mjPhotoUrl)
     window.addEventListener("beforeunload",  (e) => {
       clearInterval(timer1)
@@ -35,10 +39,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
     })
     .then(async (blob) => {
       let imgFile =await blobToBase64(blob);
-      // setControlNetImg(imgFile)
-      console.log('最终图片文件', imgFile, controlNetImg)
       file = imgFile
-      // callback(imgFile);
     });
     return file
   }
@@ -83,25 +84,41 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
     return promise
   }
   const step1 = async (img, mask, adjust) => {
-    // await urlToBase64(mjImg.mjPhotoUrl)
+    console.log('进入step')
+    schedule.current = 0
+    loadingStep.current = 0
+    setSchedule1(schedule.current)
+    setSchedule2(schedule.current)
+    setSchedule3(schedule.current)
+    setShowLoading(true)
+    let promise = new Promise((resolve, reject) => {
+       let loadingTimer1 = setInterval(() => {
+        if(loadingStep.current === 0){
+          schedule.current = schedule.current + 10
+        }
+        console.log('xxx', schedule.current > 100, loadingStep.current === 0)
+        if(schedule.current > 100 && loadingStep.current === 0){
+          schedule.current = 0
+          loadingStep.current = 1
+          console.log('结束')
+          resolve()
+          clearInterval(loadingTimer1)
+        }else{
+          setSchedule1(schedule.current)
+        }
+      }, 200);
+    });
+    await promise
+    
+    
     let res1 = await urlToBase64(segmentMask)
     let res2 = await urlToBase64(imgs.maskShowUrl)
     if(adjust){
-      console.log(adjust)
-      console.log('xxxx', scaleDrawing.current.getContext('2d'))
       // let img1 = await urlToBase64(segmentMask)
       res1 = await scaleImg(segmentMask, adjust, scaleDrawing)
-      console.log('缩放结果', res1)
       let img2 = await urlToBase64(imgs.maskShowUrl)
       res2 = await scaleImg(imgs.maskShowUrl, adjust)
-      console.log('缩放结果', res2)
     }
-    
-
-
-
-
-
     setLoading(true)
     let segmentMaskTemp = await urlToBase64(segmentMask)
     let data = {
@@ -215,11 +232,16 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
       timer1 = setInterval(async()=>{
         if(lock) return
         let result1 = await getResult(result.data.taskId);
+        if(result1.code === 200){
+          schedule.current = result1.data.progressBar
+          setSchedule2(schedule.current)
+        }
         if(result1.code === 200 && result1.data.progressBar === 100 && !lock){
           lock = true
           clearInterval(timer1)
           console.log('首次进来', timer1)
-
+          schedule.current = 0
+          loadingStep.current = 2
           endResult.src = 'data:image/png;base64,' + result1.data.resultStr.images[0]
           // console.log('xxx', fullMask)
           let data2 =      {
@@ -267,9 +289,9 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
                 ]
               }
             },
-            "batch_size": 4,
+            "batch_size": 2,
             "cfg_scale": 7,
-            "denoising_strength": 0.75,
+            "denoising_strength": 0.75,    
             "disable_extra_networks": false,
             "do_not_save_grid": false,
             "do_not_save_samples": false,
@@ -328,6 +350,10 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
             timer1 = setInterval(async()=>{
               if(lock2) return
               let result3 = await getResult(result2.data.taskId);
+              if(result3.code === 200){
+                schedule.current = result3.data.progressBar
+                setSchedule3(schedule.current)
+              }
               if(result3.code === 200 && result3.data.progressBar === 100 && !lock2){
                 lock2 = true
                 clearInterval(timer1)
@@ -336,7 +362,6 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
                   return item
                 })
                 setLoading(false)
-                  // console.log('抠图结果', result, result3.images)
                 getSdImgs(result3.data.resultStr.images)
                 clearInterval(timer1)
               }
@@ -345,7 +370,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
            setLoading(false)
          }
         }
-      }, 10000)
+      }, 3000)
   }
   const getResult = async (taskId) => {
     const result = await fetch(
@@ -384,7 +409,41 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
 
       </div>
       <canvas id='scale-canvas' ref={scaleDrawing} className='hidden' >xxxxx</canvas>
-
+      <Modal width='880px' 
+        title={null}
+        icon={null} 
+        closeIcon={null}
+        keyboard={true}
+        centered = {true}
+        maskClosable= {true}
+        footer= {null} 
+        open={showLoading} 
+      >
+        <div className='inline-block h-72'>
+          <div className='progress-box flex'>
+            <Progress className='progress-1' strokeLinecap="butt" strokeColor={'#3B73E8'} trailColor={'white'} type="circle" size={200} percent={schedule3} format={e => (loadingStep.current === 2) ? (e + '%') : ''} >
+            </Progress>
+            <Progress className='progress-2' strokeLinecap="butt" strokeColor={'#5FA8D3'} trailColor={'white'} type="circle"  size={180}  percent={schedule2} format={e => loadingStep.current === 1 ? (e + '%') : ''} >
+            </Progress>
+            <Progress className='progress-3' strokeLinecap="butt" strokeColor={'#CAE9FF'} trailColor={'white'} type="circle"  size={160}  percent={schedule1} format={e => loadingStep.current === 0 ? (e + '%') : '' } >
+            </Progress>
+          </div>
+          <div className='line-box flex flex-col flex-1 h-44 mt-16 mx-6'>
+            <div className='flex flex-row flex-auto items-center ml-8'>
+              <p className='mr-8 w-52 flex justify-end'>Load Modules</p>
+              <Progress strokeLinecap="butt" strokeColor={'#CAE9FF'} size={[400, 10]} percent={schedule1} />
+            </div>
+            <div className='flex flex-row flex-auto items-center ml-8'>
+              <p className='mr-8 w-52 flex justify-end'>AI Drawing</p>
+              <Progress strokeLinecap="butt" strokeColor={'#5FA8D3'} size={[400, 10]} percent={schedule2} />
+            </div>
+            <div className='flex flex-row flex-auto items-center ml-8'> 
+              <p className='mr-8 w-52 flex justify-end' onClick={() => {setShowLoading(false); setSchedule2(0)}}>Finalize Images</p>
+              <Progress strokeLinecap="butt" strokeColor={'#3B73E8'} size={[400, 10]} percent={schedule3} />
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

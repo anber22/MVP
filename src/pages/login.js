@@ -63,11 +63,11 @@ export default function Canvas() {
             <div className='flex items-center justify-center font-semibold w-full h-20 mt-4'>
               Login
             </div>
-            <div className='google-login'>
+            {/* <div className='google-login'>
               Log in Using Google
-            </div>
+            </div> */}
             <div className='login-use-email text-center mt-20'>
-              Log in using email address
+              {/* Log in using email address */}
             </div>
             <Form
               ref={loginInfo}
@@ -113,7 +113,7 @@ export default function Canvas() {
             <div className='forgot-password mt-2 flex justify-end'>
               Forgot password?
             </div>
-            <Button className='login-btn mt-6' type="primary" loading={loading} onClick={() => login()}>Log in</Button>
+            <Button className='login-btn mt-20' type="primary" loading={loading} onClick={() => login()}>Log in</Button>
             <div className='login-use-email text-center mt-4'>
               Need to created an account?<span className='sign-up'> Sign Up</span>
             </div>

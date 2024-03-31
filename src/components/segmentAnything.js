@@ -1,4 +1,4 @@
-import { Select, Input, Button , Popover } from 'antd';
+import { Select, Input, Button , Popover, Modal, Progress } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import {ref, useState, useRef} from 'react';
 import Canvas from '@/components/canvas';
@@ -35,6 +35,13 @@ export default function SegmentAnything({getMask, picture, photoId}) {
       label: 'below'
     }
   ]
+  let [showLoading, setShowLoading] = useState(false)
+  let loadingStep = useRef(0)
+  let schedule = useRef(0)
+  let [schedule1, setSchedule1] = useState(0)
+  let [schedule2, setSchedule2] = useState(0)
+  let [schedule3, setSchedule3] = useState(0)
+
   const content = (
     <div>
       <p>Example:</p>
@@ -43,6 +50,44 @@ export default function SegmentAnything({getMask, picture, photoId}) {
   );
   const step1 = async (img, points) => {
     setLoading(true)
+    schedule.current = 0
+    loadingStep.current = 0
+    setSchedule1(schedule.current)
+    setSchedule2(schedule.current)
+    setSchedule3(schedule.current)
+    setShowLoading(true)
+    let promise = new Promise((resolve, reject) => {
+      let loadingTimer1 = setInterval(() => {
+        if(loadingStep.current === 0){
+          schedule.current = schedule.current + 10
+        }
+        console.log('xxx', schedule.current, schedule1)
+        if(schedule.current > 100 && loadingStep.current === 0){
+          clearInterval(loadingTimer1)
+          schedule.current = 0
+          loadingStep.current = 1
+          let loadingTimer2 = setInterval(() => {
+            console.log('xxx第二xx', loadingStep.current)
+            if(loadingStep.current === 1){
+              console.log('xxx第二', schedule.current)
+              schedule.current = schedule.current + 10
+            }
+            console.log('xxx2', schedule.current, schedule2)
+            if(schedule.current > 100 && loadingStep.current === 1){
+              schedule.current = 0
+              loadingStep.current = 2
+              clearInterval(loadingTimer2)
+              resolve()
+            }else{
+              setSchedule2(schedule.current)
+            }
+          }, 200);
+        }else{
+          setSchedule1(schedule.current)
+        }
+      }, 200)
+    })
+    await promise
     // const reviewsResponse = await fetch(
     //   "api/sam/heartbeat"
     // ).then((response) => response.json());
@@ -58,6 +103,7 @@ export default function SegmentAnything({getMask, picture, photoId}) {
       "dino_box_threshold": 0.3,
       "dino_preview_checkbox": false
     }
+    loadingStep.current = 2
     const result = await fetch(
       "/mvp/ai/product/photo/1/sd/img2img/control-net/0",
       {
@@ -69,6 +115,7 @@ export default function SegmentAnything({getMask, picture, photoId}) {
         body: JSON.stringify(data)
       }
     ).then((response) => response.json(), (rej) => {setLoading(false)});
+    
     let lock = false
     let timer1 = setInterval(async()=>{
       let result1 = await getResult(result.data.taskId);
@@ -76,13 +123,14 @@ export default function SegmentAnything({getMask, picture, photoId}) {
         lock = true
         clearInterval(timer1)
         setLoading(false)
+        schedule.current = result1.data.progressBar
+        setSchedule3(schedule.current)
+        setShowLoading(false)
         const controlMaskRes = await uploadImg(result1.data.resultStr.masks[2])
         const showMaskRes = await uploadImg(result1.data.resultStr.masked_images[2])
         submitMask(controlMaskRes, showMaskRes)
       }
     }, 3000)
-   
-
   }
   const getResult = async (taskId) => {
     const result = await fetch(
@@ -199,6 +247,41 @@ export default function SegmentAnything({getMask, picture, photoId}) {
           </div> */}
         </div>
       </div>
+      <Modal width='880px' 
+        title={null}
+        icon={null} 
+        closeIcon={null}
+        keyboard={true}
+        centered = {true}
+        maskClosable= {true}
+        footer= {null} 
+        open={showLoading} 
+      >
+        <div className='inline-block h-72'>
+          <div className='progress-box flex'>
+            <Progress className='progress-1' strokeLinecap="butt" strokeColor={'#3B73E8'} trailColor={'white'} type="circle" size={200} percent={schedule3} format={e => (loadingStep.current === 2) ? (e + '%') : ''} >
+            </Progress>
+            <Progress className='progress-2' strokeLinecap="butt" strokeColor={'#5FA8D3'} trailColor={'white'} type="circle"  size={180}  percent={schedule2} format={e => loadingStep.current === 1 ? (e + '%') : ''} >
+            </Progress>
+            <Progress className='progress-3' strokeLinecap="butt" strokeColor={'#CAE9FF'} trailColor={'white'} type="circle"  size={160}  percent={schedule1} format={e => loadingStep.current === 0 ? (e + '%') : '' } >
+            </Progress>
+          </div>
+          <div className='line-box flex flex-col flex-1 h-44 mt-16 mx-6'>
+            <div className='flex flex-row flex-auto items-center ml-8'>
+              <p className='mr-8 w-52 flex justify-end'>Scan Image</p>
+              <Progress strokeLinecap="butt" size={[400, 10]} percent={schedule1} />
+            </div>
+            <div className='flex flex-row flex-auto items-center ml-8'>
+              <p className='mr-8 w-52 flex justify-end'>Identify Product</p>
+              <Progress strokeLinecap="butt" size={[400, 10]} percent={schedule2} />
+            </div>
+            <div className='flex flex-row flex-auto items-center ml-8'> 
+              <p className='mr-8 w-52 flex justify-end' onClick={() => {setShowLoading(false); setSchedule2(0)}}>Remove Background</p>
+              <Progress strokeLinecap="butt" size={[400, 10]} percent={schedule3} />
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

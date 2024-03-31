@@ -21,12 +21,13 @@ export default function Done({imgs, chooseSdImg}) {
         {
           sdImgs ? sdImgs.map((item, index) => {
             return (
+              index === sdImgs.length - 1 ? '' :
               // <img className='w-44 mr-4 cursor-pointer' key={index} src={item} onClick={() => selectDemo(item)} />
-              <Image
+             ( <Image
                 key="index"
                 width={200}
                 src={item}
-              />
+              />)
             )
           }) : ''
         }

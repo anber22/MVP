@@ -269,3 +269,29 @@ main{
     background: rgba(222, 60, 80, .9);
     z-index: 999;
 }
+
+.progress-box{
+  position: relative;
+}
+.progress-1{
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  z-index: 1;
+}
+.progress-2{
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  z-index: 2;
+}
+.progress-3{
+  position: absolute;
+  top: 70px;
+  left: 30px;
+  z-index: 3;
+}
+.line-box{
+  position: absolute;
+  left: 200px;
+}

@@ -78,7 +78,6 @@ export default function Template (props) {
               }}
             />
             <div className='mr-10'>
-              Anber
             </div>
           </Header>
           <Content
