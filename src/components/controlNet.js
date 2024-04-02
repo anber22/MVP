@@ -395,7 +395,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
   return (
     <div className='flex-col grow content-box mb-12'>
       <div>
-        Mask the product to let AI replace it with your product.
+      Draw on the image to mask the product. AI will replace it with your product.
       </div>
 
       <Canvass actionType={actionType} step1={step1} picture={mjImg.mjPhotoUrl} loading={loading} productPic={ urlToBase64(imgs.maskShowUrl) }/>

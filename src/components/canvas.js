@@ -391,9 +391,31 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
     }, 500);
 
   }
+  const nextStep = () =>{
+    if((actionType === 'line' && !isAdjust)){
+      adjustTarget()
+    }else{
+      step1(img.current.src, (actionType === 'dot' ? getPoints() : mask), (isAdjust ? {scale, endPointX, endPointY} : false))
+    }
+  }
+
   return (
     <div className='flex flex-col' >
-      <div className='mt-6 canvas-box'>
+      { actionType === 'line' ?  
+        <div className='flex'>
+          {
+            isAdjust ? (<div className='mt-8'>Scale Size</div>) :
+            (<div className='mt-8'>Stroke Width</div>)
+          }
+          <div className='line-width-slider mt-8'>
+            <Slider min={5} style={{display:( isAdjust ? '' : 'none')}} max={100} defaultValue={100} onChange={scaleChange} /> 
+            <Slider min={5} style={{display:( !isAdjust ? '' : 'none')}} max={100} defaultValue={20} onChange={lineWidthChange} />
+          </div>
+        </div>
+        
+        : ''
+      }
+      <div className='mt-10 canvas-box'>
         <input ref={(ref)=>{myInput = ref}} type="file" className='hidden' id="file_input" />
         <img ref={img} className='image' />
         <canvas ref={myDrawing} className='canvass absolute'>A drawing of something</canvas>
@@ -404,24 +426,17 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
         }
         <canvas ref={myDrawingTemp} className='hidden'></canvas>
       </div>
-      { actionType === 'line' ?  
-        <div className='line-width-slider mt-8'>
-          {/* line width */}
-            <Slider min={5} style={{display:( isAdjust ? '' : 'none')}} max={100} defaultValue={100} onChange={scaleChange} /> 
-            <Slider min={5} style={{display:( !isAdjust ? '' : 'none')}} max={100} defaultValue={20} onChange={lineWidthChange} />
-        </div>
-        : ''
-      }
+     
         <div className={'flex ' + (actionType === 'line' ? 'mt-12' : 'mt-5')}>
           {/* <Button className='select-img-btn mr-6' type="primary" onClick={() => selectImg()}>请选择图片</Button> */}
           <Button className='select-img-btn mr-6' type="primary" onClick={() => clearDraw()}>Reset</Button>
-          {
+          {/* {
             actionType === 'line' ? 
             (<Button className='select-img-btn mr-6' type="primary" onClick={() => adjustTarget()}>Adjust</Button>)
             : ''
-          }
+          } */}
           
-          <Button className='select-img-btn mr-6' type="primary" loading={loading} onClick={() => step1(img.current.src, (actionType === 'dot' ? getPoints() : mask), (isAdjust ? {scale, endPointX, endPointY} : false))}>Next</Button>
+          <Button className='select-img-btn mr-6' type="primary" loading={loading} onClick={() => nextStep()}>Next</Button>
         </div>
     </div>
   )

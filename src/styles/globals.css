@@ -110,10 +110,10 @@ main{
   /* top: 260px; */
 }
 .line-width-slider{
-  width: 200px;
+  width: 300px;
   position: absolute;
-  left: 30px;
-  top: 340px;
+  left: 130px;
+  top: 30px;
 }
 .result-img{
   width: 300px;
