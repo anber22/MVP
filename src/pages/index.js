@@ -29,7 +29,7 @@ function Index (){
       dataIndex: 'productId',
       key: 'productId',
       render: (productId, productName) => <div className='flex'>
-          {/* <p className='underline cursor-pointer mr-6' onClick={($event) => editProduct($event, productId, productName)}>Edit</p> */}
+          <p className='underline cursor-pointer mr-6' onClick={($event) => editProduct($event, productId, productName)}>Edit</p>
           <p className='underline cursor-pointer' onClick={($event) => deleteProduct($event, productId, productName)}>Delete</p>
         </div>
     }
@@ -39,12 +39,14 @@ function Index (){
   let [showEditProduct, setShowEditProduct] = useState(false)
   let [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
+  const [currentProduct, setCurrentProduct] = useState([])
   useEffect(() => {
     getProducts()
   }, [])
-  const editProduct = (e) => {
+  const editProduct = (e, productId) => {
     console.log('删除')
     e.stopPropagation() // 阻止冒泡
+    setCurrentProduct(productId)
     setShowEditProduct(true)
   }
   const getProducts = async () => {
@@ -126,9 +128,9 @@ function Index (){
   }
   const showProductOption = () => {
     if(showCreateProduct){
-      return <CreateProduct backToList={(e) => {backToList(e)}}/>
+      return <CreateProduct backToList={(e) => {backToList(e)}} />
     }else if(showEditProduct) {
-      return <EditProduct backToList={(e) => {backToList(e)}}/>
+      return <EditProduct backToList={(e) => {backToList(e)}} productId = {currentProduct}/>
     }else{
       return false
     }

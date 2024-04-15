@@ -4,7 +4,7 @@ import {ref, useState, useRef, useEffect} from 'react';
 import fs from 'fs';
 import Router from "next/router"
 import Cookies from 'js-cookie';
-export default function ChooseDemo({backToList}) {
+export default function ChooseDemo({backToList, productId}) {
   let myInput = useRef()
   let states = [
       {
@@ -366,6 +366,9 @@ export default function ChooseDemo({backToList}) {
   console.log('50', states)
   let [selectImgType, setSelectImgType] = useState(1)
   let [selectImgs, setSelectImgs] = useState([])
+  let [showForm, setShowForm] = useState(false)
+
+  let [formData, setFormData] = useState()
   let images = []
   const [messageApi, contextHolder] = message.useMessage();
   let [loading, setLoading] = useState(false)
@@ -375,7 +378,7 @@ export default function ChooseDemo({backToList}) {
   const addressInfo = useRef({})
   const getProductInfo = async () => {
     const result = await fetch(
-      "/mvp/ai/product/61",
+      `/mvp/ai/product/${productId}`,
       {
         method: "get",
         headers: {
@@ -390,32 +393,28 @@ export default function ChooseDemo({backToList}) {
         pathname: '/login', 
       })
     }
+    if(result.data.category === 0){
+      result.data.category = 'Skin Care'
+    }
+    setFormData(result.data)
+    console.log('商品详情', result.data)
+    setShowForm(true)
   }
   const onFinish = async e => {
     let data = e
     setLoading(true)
-    if(selectImgType === 1){
-      data = {...data, isPost: 1, pictures: selectImgs}
-      await createdProduct(data)
-    }else {
-      const addressRes = await addressInfo.current.validateFields()
-      console.log('地址表单信息', addressRes)
-      if(!addressRes.address){
-        return
-      }else{
-        data = {...data, isPost: 2, postInfo: addressRes}
-        await createdProduct(data)
-      }
-    }
+    data = {...data}
+    await editProduct(data)
     setLoading(false)
 
     console.log('提交表单', data)
   }
-  const createdProduct = async (data) => {
+  const editProduct = async (data) => {
+    data.category = 0
     const result = await fetch(
-      "/mvp/ai/product",
+      `/mvp/ai/product/${productId}`,
       {
-        method: "POST",
+        method: "put",
         headers: {
           'Content-Type': 'application/json',
           'Authorization': Cookies.get('token')
@@ -494,7 +493,7 @@ export default function ChooseDemo({backToList}) {
     setSelectImgType(e.target.value)
   }
   return (
-    <div className='flex flex-col text-2xl'>
+      showForm ? (<div className='flex flex-col text-2xl'>
       {contextHolder}
       Edit Product
       <Form
@@ -523,7 +522,7 @@ export default function ChooseDemo({backToList}) {
             },
           ]}
         >
-          <Input />
+          <Input defaultValue={formData?.productName}/>
         </Form.Item>
         <Form.Item
           label="Brand Name"
@@ -573,140 +572,6 @@ export default function ChooseDemo({backToList}) {
         >
            <TextArea rows={3} placeholder="For example: A small brown glass bottle with gold cap" maxLength={150} />
         </Form.Item>
-        <Form.Item label="Photos" >
-          <div className='flex flex-col'>
-            <div className='pt-2'>
-              Would you like to upload your product photos or let 
-              <br/>
-              AIProShots team take photos for your product?
-            </div>
-            <Radio.Group className='mt-2' onChange={changeType} value={selectImgType}>
-              <Space direction="vertical">
-                <Radio value={1}>Upload my product photos (Faster)</Radio>
-                <Radio value={2}>AIProShots team takes photos for me (Better Quality, 2-3 Weeks)</Radio>
-              </Space>
-            </Radio.Group>
-          </div>
-          {
-            selectImgType === 1 ? (
-              <div className='border-dashed address-info-box flex flex-col p-4 mt-2'>
-                {
-                  selectImgs ? selectImgs.map((item, index) => {
-                    return <img className='product-img mr-4' key={index} src={item} />
-                  }) : ''
-                }
-                You may upload multiple photos at once.
-                <Button className='mt-4 w-20' type="primary" onClick={() => getImg()}>
-                  Browse
-                </Button>
-              </div>
-            ) : (
-              <div className='border-dashed p-4 mt-2 address-info-box'>
-                
-                {`Don't have the perfect photo to upload?`}
-                <br/>
-                We will do it for you. Please fill out the form below to send your product to us.
-                <Form
-                  ref={addressInfo}
-                  className='mt-2'
-                  name="address"
-                  labelCol={{
-                    span: 7
-                  }}
-                  wrapperCol={{
-                    span: 16,
-                  }}
-                  style={{
-                    maxWidth: 600,
-                  }}
-                  initialValues={{
-                    remember: true,
-                  }}
-                  autoComplete="off"
-                >
-                  <Form.Item
-                    label="Your Name"
-                    name="addressee"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please input your name!',
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    label="Mobile Phone"
-                    name="mobilePhone"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please input your mobile phone!',
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    label="Address"
-                    name="address"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please input your address!',
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    label="City"
-                    name="city"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please input your city!',
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    label="State"
-                    name="state"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please input your state!',
-                      },
-                    ]}
-                  >
-                    <Select
-                      style={{
-                        width: 220,
-                      }}
-                      options={states}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Zip Code"
-                    name="zipCode"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please input your zipCode!',
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  
-                </Form>
-              </div>
-            )
-          }
-        </Form.Item>
         <Form.Item
           wrapperCol={{
             offset: 8,
@@ -722,6 +587,6 @@ export default function ChooseDemo({backToList}) {
         </Form.Item>
       </Form>
       <input ref={(ref)=>{myInput = ref}} type="file" className='hidden' id="file_input" multiple/>
-    </div>
+    </div>):''
   )
 }
