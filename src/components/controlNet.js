@@ -68,10 +68,10 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
     let promise = new Promise((resolve)=>{
       image.onload = () => {
         console.log('onload', scaleState, scaleDrawing)
-        myElement.width = image.width;
-        myElement.height = image.height;
+        myElement.width = (image.width >= 1024 ? image.width : 1024);
+        myElement.height = (image.height >= 1024 ? image.height : 1024);
         if(isBlack){
-          scaleContext.rect(0,0,image.width,image.height);
+          scaleContext.rect(0,0,(image.width >= 1024 ? image.width : 1024), (image.height >= 1024 ? image.height : 1024));
           scaleContext.fillStyle="black";
           scaleContext.fill();
         }

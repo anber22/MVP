@@ -2,6 +2,7 @@ import { Button, Input, Space, Table, Tag, Modal } from 'antd';
 import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 import CreateProduct from '@/components/product/createProduct.js';
+import EditProduct from '@/components/product/editImage.js';
 import Router from "next/router"
 import Cookies from 'js-cookie';
 function Index (){
@@ -27,16 +28,25 @@ function Index (){
       title: '',
       dataIndex: 'productId',
       key: 'productId',
-      render: (productId, productName) => <p className='underline cursor-pointer' onClick={($event) => deleteProduct($event, productId, productName)}>Delete</p>
+      render: (productId, productName) => <div className='flex'>
+          {/* <p className='underline cursor-pointer mr-6' onClick={($event) => editProduct($event, productId, productName)}>Edit</p> */}
+          <p className='underline cursor-pointer' onClick={($event) => deleteProduct($event, productId, productName)}>Delete</p>
+        </div>
     }
   ]
   let [curPage, setCurPage] = useState(1)
   let [showCreateProduct, setShowCreateProduct] = useState(false)
+  let [showEditProduct, setShowEditProduct] = useState(false)
   let [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
   useEffect(() => {
     getProducts()
   }, [])
+  const editProduct = (e) => {
+    console.log('删除')
+    e.stopPropagation() // 阻止冒泡
+    setShowEditProduct(true)
+  }
   const getProducts = async () => {
     setLoading(true)
     const products = await fetch(
@@ -81,7 +91,8 @@ function Index (){
   }
   const backToList = (reload) => {
     console.log('reload', reload)
-    setShowCreateProduct(false)
+    if(showCreateProduct) setShowCreateProduct(false)
+    if(showEditProduct) setShowEditProduct(false)
     if(reload) getProducts()
   }
   const deleteProduct = async (e, id, product) => {
@@ -113,9 +124,18 @@ function Index (){
       onCancel: () => {}
     })
   }
+  const showProductOption = () => {
+    if(showCreateProduct){
+      return <CreateProduct backToList={(e) => {backToList(e)}}/>
+    }else if(showEditProduct) {
+      return <EditProduct backToList={(e) => {backToList(e)}}/>
+    }else{
+      return false
+    }
+  }
   return (
     <div className='flex-grow overflow-y-auto'>
-      {showCreateProduct ? (<CreateProduct backToList={(e) => {backToList(e)}}/>)  : (
+      {showProductOption() ? showProductOption()  : (
         <div>
           <div className='flex items-center text-2xl'>
             My Products

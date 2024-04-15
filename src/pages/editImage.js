@@ -8,7 +8,7 @@ import Done from '@/components/done';
 import { useRouter } from 'next/router';
 import Router from "next/router"
 import Cookies from 'js-cookie';
-function AA (){
+function EditImage (){
   let [endResult, setEndResult] = useState()
   const [current, setCurrent] = useState(0);
   let [fullMask, setFullMask] = useState('')
@@ -20,7 +20,6 @@ function AA (){
   let [sdImgs, setSdImgs] = useState('')
   let [sdImg, setSdImg] = useState('')
   let [photoId, setPhotoId] = useState()
-  let [productId, setProductId] = useState()
   let [showStatus, setShowStatus] = useState(false)
   let [prompt, setPrompt] = useState('')
   const description = ''
@@ -31,10 +30,9 @@ function AA (){
   const router = useRouter();
   const {query} = router
   useEffect(() => {
-    const { hasMask, photoId, productId } = query;
+    const { hasMask, photoId } = query;
     if(photoId){
       setPhotoId(photoId)
-      setProductId(productId)
       getPhotoMask(photoId) 
     }
   }, [router.query])
@@ -139,7 +137,7 @@ function AA (){
         <SegmentAnything getMask={getMask} picture={imgs} photoId={photoId}/>
       </div>
       <div className={ current !== 1 ? 'hidden' : '' }>
-        <HasMask imgs={imgs} masks={maskInfo} gotMjImg={getMjNewImg} backToPrevious={() => backToPrevious()} getPrompt={e => {setPrompt(e)}} productId = {productId}/>
+        <HasMask imgs={imgs} masks={maskInfo} gotMjImg={getMjNewImg} backToPrevious={() => backToPrevious()} getPrompt={e => {setPrompt(e)}}/>
       </div>
       <div className={ current !== 2 ? 'hidden' : '' }>
         <ChooseDemo imgs={mjImgs} chooseDemo={selectMjImg}/>
@@ -157,9 +155,9 @@ function AA (){
     
   )
 }
-AA.getInitialProps = async ({ query }) => {
+EditImage.getInitialProps = async ({ query }) => {
   return { query }
 }
 export default function Home() {
-  return <AA></AA>
+  return <EditImage></EditImage>
 }

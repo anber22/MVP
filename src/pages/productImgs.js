@@ -36,12 +36,12 @@ function Index (){
     setImgs(products.data)
   }
   const toPainting = current => {
-     // console.log('当前选中的图片', current)
     Router.push({
       pathname: '/createImage', 
       query: {
         hasMask: true,
-        photoId: current.photoId
+        photoId: current.photoId,
+        productId: productId,
       }
     })
   }

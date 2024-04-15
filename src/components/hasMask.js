@@ -4,7 +4,7 @@ import Mj from '@/components/mj';
 import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 import Cookies from 'js-cookie';
-export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPrompt}) {
+export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPrompt, productId}) {
   const { TextArea } = Input;
   let [loading, setLoading] = useState(false)
   const options = [
@@ -41,10 +41,33 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   let [schedule3, setSchedule3] = useState(0)
   const mj = new Mj()
   let [description, setDescription] = useState()
+  let [productInfo, setProductInfo] = useState()
   let [position, setPosition] = useState()
   useEffect(() => {
      // console.log('进入hasmask', imgs, masks)
+    getProductInfo()
   }, [])
+  const getProductInfo = async () => {
+    const result = await fetch(
+      `/mvp/ai/product/${productId}`,
+      {
+        method: "get",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': Cookies.get('token')
+        },
+      }
+    ).then((response) => response.json());
+    if(result.code === 401){
+      Router.push({
+        pathname: '/login', 
+      })
+      return
+    }else if(result.code === 200){
+      console.log('xxxxx', result)
+      setProductInfo(result.data)
+    }
+  }
   const handleChange = e => {
      // console.log('eeee', e)
     setPosition(e)
@@ -103,7 +126,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
          'Authorization': Cookies.get('token')
        },
        body: JSON.stringify({
-         "description": description,
+         "description": `${productInfo.shapeDescription} ${preposition} ${description}`,
          "preposition": preposition,
          "pictureUrls": [
            image
@@ -140,12 +163,12 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
         setShowLoading(false)
       }, 1000);
      }
-     if(createResult.data.taskStatus === 1){
-       callBack(createResult.data.photos)
-       clearInterval(timer)
-     }
-   }, 3000);
- } 
+      if(createResult.data.taskStatus === 1){
+        callBack(createResult.data.photos)
+        clearInterval(timer)
+      }
+    }, 3000);
+  } 
   const getMjImg = e => {
      // console.log('拿到mj的图片', e)
     setLoading(false)
