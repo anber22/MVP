@@ -1,4 +1,4 @@
-import { Button, Input, Select, Space, Table, Tag } from 'antd';
+import { Button, Input, Select, Space, Table, Tag, message } from 'antd';
 import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 import { useRouter } from 'next/router';
@@ -10,6 +10,7 @@ function Index (){
   const [imgs, setImgs] = useState([])
   const [productId, setProductId] = useState([])
   const [showControlIndex, setShowControlIndex] = useState(-1)
+  const [messageApi, contextHolder] = message.useMessage();
   let myInput = useRef()
   useEffect(() => {
     const { id } = router.query;
@@ -82,10 +83,35 @@ function Index (){
   const getFile = async e => {
     const resultArr = await e.target.files
     // uploadImg(e.target.files[0])
+    var reader = new FileReader();
     console.log('拿到文件', imgs)
     for(let item of resultArr){
-      let url = await uploadImg(item)
-      await addProductImg(url)
+      console.log('size', item)
+      reader.readAsDataURL(item);
+      reader.onload = function (evt) {
+          var replaceSrc = evt.target.result;
+          var imageObj = new Image();
+          imageObj.src = replaceSrc;
+          imageObj.onload =  async () => {
+            console.log(imageObj.width + imageObj.height);
+            if(imageObj.width !== imageObj.height || imageObj.width < 1024 || imageObj.height < 1024){
+              messageApi.open({
+                type: 'error',
+                content: 'Minimum 1024 x 1024, Square Size, JPG or PNG'
+              });
+            }else if((item.size / (1024 * 1024)) > 3){
+              messageApi.open({
+                type: 'error',
+                content: 'The size of the uploaded image cannot exceed 3M'
+              });
+            } else {
+              let url = await uploadImg(item)
+              await addProductImg(url)
+              await getProductImgs(productId)
+            }
+          };
+      };
+      
     }
     e.target.value = ''
     getProductImgs(productId)
@@ -133,9 +159,11 @@ function Index (){
   }
   return (
     <div className='flex-col grow content-box mb-12'>
+      {contextHolder}
       <div className='flex'>
         <div className='mb-4'>Select an image to start AI: </div>
-        <div className='mb-4 ml-12 underline cursor-pointer' onClick={() => showSelectImg()}> (or Upload New Photo) </div>
+        <div className='mb-4 ml-12 mr-4 underline cursor-pointer' onClick={() => showSelectImg()}> (or Upload New Photo) </div>
+        <span>Minimum 1024 x 1024, Square Size, JPG or PNG</span>
       </div>
       <div className='flex'>
         {

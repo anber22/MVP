@@ -425,25 +425,41 @@ export default function ChooseDemo({backToList}) {
   }
   const getFile = async e => {
     console.log('e.target.files[0]', e.target)
+    var reader = new FileReader();
     for(let item of e.target.files){
-      console.log('size', item.size / (1024 * 1024))
-      if((item.size / (1024 * 1024)) > 3){
-        messageApi.open({
-          type: 'error',
-          content: 'The size of the uploaded image cannot exceed 3M'
-        });
-      } else {
-        const result = await uploadImg(item)
-        
-        console.log('拿到文件', images)
-
-        images.push(result)
-        
-        selectImgs = images
-        setSelectImgs(images)
-
-        console.log('拿到文件', images, selectImgs)
-      }
+      console.log('size', item)
+      reader.readAsDataURL(item);
+      reader.onload = function (evt) {
+          var replaceSrc = evt.target.result;
+          var imageObj = new Image();
+          imageObj.src = replaceSrc;
+          imageObj.onload =  async () => {
+            console.log(imageObj.width + imageObj.height);
+            if(imageObj.width !== imageObj.height || imageObj.width < 1024 || imageObj.height < 1024){
+              messageApi.open({
+                type: 'error',
+                content: 'Minimum 1024 x 1024, Square Size, JPG or PNG'
+              });
+            }else if((item.size / (1024 * 1024)) > 3){
+              messageApi.open({
+                type: 'error',
+                content: 'The size of the uploaded image cannot exceed 3M'
+              });
+            } else {
+              const result = await uploadImg(item)
+              
+              console.log('拿到文件', images)
+      
+              images.push(result)
+              
+              selectImgs = images
+              setSelectImgs(images)
+      
+              console.log('拿到文件', images, selectImgs)
+            }
+          };
+      };
+     
     }
     e.target.value = ''
   }
@@ -579,6 +595,8 @@ export default function ChooseDemo({backToList}) {
                   }) : ''
                 }
                 You may upload multiple photos at once.
+                <br/>
+                <p className='text-slate-800'>Minimum 1024 x 1024, Square Size, JPG or PNG</p>
                 <Button className='mt-4 w-20' type="primary" onClick={() => getImg()}>
                   Browse
                 </Button>

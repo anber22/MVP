@@ -75,7 +75,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   const createMjImgToImg = async () => {
     setLoading(true)
     
-    await imgToImg(imgs.photoUrl, options[position].label, description, getMjImg)
+    await imgToImg(imgs.photoUrl, options[position]?.label, description, getMjImg)
   }
   const imgToImg = async (image, preposition, description, callBack) => {
     // console.log('mj参数', image, preposition, description)
@@ -117,23 +117,37 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
       }, 200)
     })
     await promise
-    const result = await fetch(
-     `/mvp/ai/product/photo/${1}/mj/img2img`,
-     {
-       method: "POST",
-       headers: {
-         'Content-Type': 'application/json',
-         'Authorization': Cookies.get('token')
-       },
-       body: JSON.stringify({
-         "description": `${productInfo.shapeDescription} ${preposition} ${description}`,
-         "preposition": preposition,
-         "pictureUrls": [
-           image
-         ]
-       })
-     }
-   ).then((response) => response.json());
+  //   const result = await fetch(
+  //    `/mvp/ai/product/photo/${1}/mj/img2img`,
+  //    {
+  //      method: "POST",
+  //      headers: {
+  //        'Content-Type': 'application/json',
+  //        'Authorization': Cookies.get('token')
+  //      },
+  //      body: JSON.stringify({
+  //        "description": `${productInfo.shapeDescription} ${preposition} ${description}`,
+  //        "preposition": preposition,
+  //        "pictureUrls": [
+  //          image
+  //        ]
+  //      })
+  //    }
+  //  ).then((response) => response.json());
+  const result = await fetch(
+    `/mvp/ai/product/photo/${productId}/mj/text2img`,
+    {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': Cookies.get('token')
+      },
+      body: JSON.stringify({
+        "description": `${description}`,
+      })
+    }
+  ).then((response) => response.json());
+
    if(result.code === 401){
      Router.push({
        pathname: '/login', 
@@ -174,7 +188,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
     setLoading(false)
 
     gotMjImg(e)
-    getPrompt(options[position].label + ' ' + description)
+    getPrompt(options[position]?.label + ' ' + description)
   }
   const back = () => {
     console.log('返回')
@@ -201,14 +215,14 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           I want to see my product
         </div>
         <Select
-            className='mt-12'
+            className='mt-12 hidden'
             style={{
               width: 220,
             }}
             onChange={handleChange}
             options={options}
           />
-          <TextArea className='w-370 mt-4' onChange={e => setDescription(e.target.value)} rows={4} placeholder="a luxury marble coutertop kitchen island." maxLength={2000} />
+          <TextArea className='w-370 mt-16' onChange={e => setDescription(e.target.value)} rows={6} placeholder="Describe the image background." maxLength={2000} />
         <div className='w-full flex mt-4'>
           <Button className='w-36' type="primary" onClick={() => {back()}}>Back</Button>
           <Button className='w-36 ml-6' type="primary" loading={loading} onClick={() => createMjImgToImg()}>Next</Button>

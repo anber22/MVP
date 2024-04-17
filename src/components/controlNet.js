@@ -75,8 +75,12 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
           scaleContext.fillStyle="black";
           scaleContext.fill();
         }
-        
-        scaleContext.drawImage(image, (adjust.endPointX / 300 * image.width) - (image.width * (adjust.scale.current / 100) / 2) , (adjust.endPointY / 300 * image.height) - (image.height * (adjust.scale.current / 100) / 2), image.width * (adjust.scale.current / 100), image.height * (adjust.scale.current / 100));
+        console.log('adjust', adjust)
+        if(!adjust.endPointX){
+          scaleContext.drawImage(image, 0, 0, image.width * (adjust.scale.current / 100), image.height * (adjust.scale.current / 100));
+        }else{
+          scaleContext.drawImage(image, (adjust.endPointX / 300 * image.width) - (image.width * (adjust.scale.current / 100) / 2) , (adjust.endPointY / 300 * image.height) - (image.height * (adjust.scale.current / 100) / 2), image.width * (adjust.scale.current / 100), image.height * (adjust.scale.current / 100));
+        }
         resolve(myElement.toDataURL("image/png"));
       }
     })
