@@ -20,7 +20,8 @@ export default function Template (props) {
     };
   }
   const items = [
-    getItem('My Product', '/', <ShoppingTwoTone />),
+    getItem('My Product', '/', <img className='w-4 h-4' src="/product.png"/>),
+    // 
   ];
   const selectMenu = e => {
     console.log('eeee', e)
