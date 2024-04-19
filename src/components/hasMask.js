@@ -4,7 +4,7 @@ import Mj from '@/components/mj';
 import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 import Cookies from 'js-cookie';
-export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPrompt, productId}) {
+export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPrompt, productId, photoId}) {
   const { TextArea } = Input;
   let [loading, setLoading] = useState(false)
   const options = [
@@ -135,7 +135,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   //    }
   //  ).then((response) => response.json());
   const result = await fetch(
-    `/mvp/ai/product/photo/${productId}/mj/text2img`,
+    `/mvp/ai/product/photo/${photoId}/mj/text2img`,
     {
       method: "POST",
       headers: {

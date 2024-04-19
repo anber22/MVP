@@ -139,7 +139,7 @@ function AA (){
         <SegmentAnything getMask={getMask} picture={imgs} photoId={photoId}/>
       </div>
       <div className={ current !== 1 ? 'hidden' : '' }>
-        <HasMask imgs={imgs} masks={maskInfo} gotMjImg={getMjNewImg} backToPrevious={() => backToPrevious()} getPrompt={e => {setPrompt(e)}} productId = {productId}/>
+        <HasMask imgs={imgs} masks={maskInfo} gotMjImg={getMjNewImg} backToPrevious={() => backToPrevious()} getPrompt={e => {setPrompt(e)}} productId = {productId} photoId = {photoId}/>
       </div>
       <div className={ current !== 2 ? 'hidden' : '' }>
         <ChooseDemo imgs={mjImgs} chooseDemo={selectMjImg}/>
