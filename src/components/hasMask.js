@@ -186,7 +186,6 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
     }, 3000);
   } 
   const getMjImg = e => {
-     // console.log('拿到mj的图片', e)
     setLoading(false)
 
     gotMjImg(e)
