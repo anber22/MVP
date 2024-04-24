@@ -217,7 +217,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
       </div>
       <div className='flex flex-col'>
         <div className='flex h-10 items-center'>
-          I want to see my product
+          Describe the image background.
           <div className='w-36 help-btn ml-6 flex items-center justify-center' onClick={() => setShowInstruction(true)}>Help</div>
         </div>
         <Select
@@ -228,7 +228,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
             onChange={handleChange}
             options={options}
           />
-          <TextArea className='w-370 mt-8' onChange={e => setDescription(e.target.value)} rows={6} placeholder="Describe the image background." maxLength={2000} />
+          <TextArea className='w-370 mt-8' onChange={e => setDescription(e.target.value)} rows={6} placeholder="Example: Gradient Blue Background with Flowers" maxLength={2000} />
         <div className='w-full flex mt-6'>
           <Button className='w-36' type="primary" onClick={() => {back()}}>Back</Button>
           <Button className='w-36 ml-6' type="primary" loading={loading} onClick={() => createMjImgToImg()}>Next</Button>
