@@ -4,10 +4,12 @@ import Canvass from '@/components/canvas';
 import fetchcc from 'node-fetch';
 import axios from 'axios'
 import Cookies from 'js-cookie';
+import Instruction from '@/components/instruction.js'
 export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, prompt, imgs}) {
   const actionType = 'line'
   let myInput = null
   let [endResult, setEndResult] = useState()
+  let [showInstruction, setShowInstruction] = useState(false)
   // let [controlNetImg, setControlNetImg] = useState('')
   let [controlNetImg, setControlNetImg] = useState('')
   let [loading, setLoading] = useState(false)
@@ -397,10 +399,14 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
     console.log('getFile', e)
     controlNetImg = e
   }
+  const closeModal = () => {
+    setShowInstruction(false)
+  }
   return (
     <div className='flex-col grow content-box mb-12'>
-      <div>
-      Draw on the image to mask the product. AI will replace it with your product.
+      <div className='flex items-center'>
+        Draw on the image to mask the product. AI will replace it with your product.
+        <Button className='w-36 help-btn ml-6' type="primary" onClick={() => setShowInstruction(true)}>Help</Button>
       </div>
 
       <Canvass actionType={actionType} step1={step1} picture={mjImg.mjPhotoUrl} loading={loading} productPic={ urlToBase64(imgs.maskShowUrl) }/>
@@ -443,12 +449,18 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
               <Progress strokeLinecap="butt" strokeColor={'#5FA8D3'} size={[400, 10]} percent={schedule2} />
             </div>
             <div className='flex flex-row flex-auto items-center ml-8'> 
-              <p className='mr-8 w-52 flex justify-end' onClick={() => {setShowLoading(false); setSchedule2(0)}}>Finalize Images</p>
+              <p className='mr-8 w-52 flex justify-end' >Finalize Images</p>
               <Progress strokeLinecap="butt" strokeColor={'#3B73E8'} size={[400, 10]} percent={schedule3} />
             </div>
           </div>
         </div>
       </Modal>
+      {
+        showInstruction ? 
+        (<Instruction index={3} closeModal={closeModal}></Instruction>)
+         : 
+        ""
+      }
     </div>
   )
 }

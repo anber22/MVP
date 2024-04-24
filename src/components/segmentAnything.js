@@ -2,11 +2,13 @@ import { Select, Input, Button , Popover, Modal, Progress } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import {ref, useState, useRef} from 'react';
 import Canvas from '@/components/canvas';
+import Instruction from '@/components/instruction.js'
 import Router from "next/router"
 import Cookies from 'js-cookie';
 export default function SegmentAnything({getMask, picture, photoId}) {
   const actionType = 'dot'
   let [endResult, setEndResult] = useState()
+  let [showInstruction, setShowInstruction] = useState(false)
   const { TextArea } = Input;
   let [loading, setLoading] = useState(false)
   const options = [
@@ -212,6 +214,9 @@ export default function SegmentAnything({getMask, picture, photoId}) {
   const getMasks = e => {
     getMask(e)
   }
+  const closeModal = () => {
+    setShowInstruction(false)
+  }
   return (
     <div className='flex flex-col content-box'>
       <div className='flex'>
@@ -220,10 +225,11 @@ export default function SegmentAnything({getMask, picture, photoId}) {
             Help AI identify your product.
           </div>
           <div className='mb-4'>
-            Left click to create 2 - 5 BLACK dots on your product.
+            Left click to create 2 - 5 BLACK dots on your product. 
             <Popover content={content} title="Tips">
               <QuestionCircleOutlined className='ml-4'/>
             </Popover>
+            <Button className='w-36 help-btn ml-6' type="primary" onClick={() => setShowInstruction(true)}>Help</Button>
           </div>
           <Canvas className='flex' actionType={actionType} step1={step1} picture={picture.photoUrl} loading={loading}/>
         </div>
@@ -276,12 +282,18 @@ export default function SegmentAnything({getMask, picture, photoId}) {
               <Progress strokeLinecap="butt" size={[400, 10]} percent={schedule2} />
             </div>
             <div className='flex flex-row flex-auto items-center ml-8'> 
-              <p className='mr-8 w-52 flex justify-end' onClick={() => {setShowLoading(false); setSchedule2(0)}}>Remove Background</p>
+              <p className='mr-8 w-52 flex justify-end' >Remove Background</p>
               <Progress strokeLinecap="butt" size={[400, 10]} percent={schedule3} />
             </div>
           </div>
         </div>
       </Modal>
+      {
+        showInstruction ? 
+        (<Instruction index={0} closeModal={closeModal}></Instruction>)
+         : 
+        ""
+      }
     </div>
   )
 }

@@ -298,3 +298,32 @@ main{
   position: absolute;
   left: 200px;
 }
+
+.instruction-img{
+  width: 200px;
+  height: 200px;
+}
+.right-arrow{
+  width: 50px;
+  height: 100px;
+}
+.product-text-img{
+  width: 500px;
+  height: 200px;
+}
+.products-img{
+  width: 600px;
+  height: 160px;
+}
+.help-btn{
+  width: 80px;
+  border-radius: 10px;
+  background-color: #24BE16;
+  padding: 3px 4px;
+}
+.help-btn:hover{
+  width: 80px;
+  border-radius: 10px;
+  background-color: #24BE16 !important;
+  padding: 3px 4px;
+}

@@ -1,11 +1,13 @@
-import { Select, Input, Button, Modal, Progress } from 'antd';
+import { Select, Input, Button, Modal, Progress, Steps } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import Mj from '@/components/mj';
 import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 import Cookies from 'js-cookie';
+import Instruction from '@/components/instruction.js'
 export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPrompt, productId, photoId}) {
   const { TextArea } = Input;
+  let [showInstruction, setShowInstruction] = useState(false)
   let [loading, setLoading] = useState(false)
   const options = [
     {
@@ -194,6 +196,9 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
     console.log('返回')
     backToPrevious()
   }
+  const closeModal = () => {
+    setShowInstruction(false)
+  }
   return (
     <div className='flex content-box'>
       {/* <div className='w-80 flex flex-col'>
@@ -213,6 +218,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
       <div className='flex flex-col'>
         <div className='flex h-10 items-center'>
           I want to see my product
+          <Button className='w-36 help-btn ml-6' type="primary" onClick={() => setShowInstruction(true)}>Help</Button>
         </div>
         <Select
             className='mt-12 hidden'
@@ -257,12 +263,18 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
               <Progress strokeLinecap="butt" strokeColor={'#5FA8D3'} size={[400, 10]} percent={schedule2} />
             </div>
             <div className='flex flex-row flex-auto items-center ml-8'> 
-              <p className='mr-8 w-52 flex justify-end' onClick={() => {setShowLoading(false); setSchedule2(0)}}>Generate Ideas</p>
+              <p className='mr-8 w-52 flex justify-end' >Generate Ideas</p>
               <Progress strokeLinecap="butt" strokeColor={'#3B73E8'} size={[400, 10]} percent={schedule3} />
             </div>
           </div>
         </div>
       </Modal>
+      {
+        showInstruction ? 
+        (<Instruction index={1} closeModal={closeModal}></Instruction>)
+         : 
+        ""
+      }
     </div>
   )
 }
