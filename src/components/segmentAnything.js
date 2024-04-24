@@ -224,12 +224,12 @@ export default function SegmentAnything({getMask, picture, photoId}) {
           <div className='mb-4'>
             Help AI identify your product.
           </div>
-          <div className='mb-4'>
+          <div className='mb-4 flex '>
             Left click to create 2 - 5 BLACK dots on your product. 
             <Popover content={content} title="Tips">
               <QuestionCircleOutlined className='ml-4'/>
             </Popover>
-            <Button className='w-36 help-btn ml-6' type="primary" onClick={() => setShowInstruction(true)}>Help</Button>
+            <div className='w-36 help-btn ml-6 flex items-center justify-center' onClick={() => setShowInstruction(true)}>Help</div>
           </div>
           <Canvas className='flex' actionType={actionType} step1={step1} picture={picture.photoUrl} loading={loading}/>
         </div>

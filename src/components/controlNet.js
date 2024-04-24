@@ -406,7 +406,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
     <div className='flex-col grow content-box mb-12'>
       <div className='flex items-center'>
         Draw on the image to mask the product. AI will replace it with your product.
-        <Button className='w-36 help-btn ml-6' type="primary" onClick={() => setShowInstruction(true)}>Help</Button>
+        <div className='w-36 help-btn ml-6 flex items-center justify-center' onClick={() => setShowInstruction(true)}>Help</div>
       </div>
 
       <Canvass actionType={actionType} step1={step1} picture={mjImg.mjPhotoUrl} loading={loading} productPic={ urlToBase64(imgs.maskShowUrl) }/>

@@ -18,9 +18,9 @@ export default function Done({imgs, chooseSdImg}) {
   }
   return (
     <div className='flex flex-col content-box'>
-      <div className='flex items-center'>
-        Done! See the images below:
-        <Button className='w-36 help-btn ml-6' type="primary" onClick={() => setShowInstruction(true)}>Help</Button>
+      <div className='flex flex-row items-center'>
+        <div>Done! See the images below:</div>
+        <div className='w-36 help-btn ml-6 flex items-center justify-center' onClick={() => setShowInstruction(true)}>Help</div>
       </div>
       <div className='flex mt-6'>
         {

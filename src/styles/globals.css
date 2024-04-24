@@ -317,10 +317,15 @@ main{
 }
 .help-btn{
   width: 80px;
+  height: 20px;
   border-radius: 10px;
   background-color: #24BE16;
   padding: 3px 4px;
+  font-size: 12px;
+  color: white;
+  cursor: pointer;
 }
+
 .help-btn:hover{
   width: 80px;
   border-radius: 10px;

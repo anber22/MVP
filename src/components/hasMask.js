@@ -213,12 +213,12 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
         <div className='flex h-10 items-center'>
           Product Selected 
         </div>
-        <img className='w-9/12 mt-6' src={imgs.maskShowUrl}/>
+        <img className='w-9/12' src={imgs.maskShowUrl}/>
       </div>
       <div className='flex flex-col'>
         <div className='flex h-10 items-center'>
           I want to see my product
-          <Button className='w-36 help-btn ml-6' type="primary" onClick={() => setShowInstruction(true)}>Help</Button>
+          <div className='w-36 help-btn ml-6 flex items-center justify-center' onClick={() => setShowInstruction(true)}>Help</div>
         </div>
         <Select
             className='mt-12 hidden'
@@ -228,8 +228,8 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
             onChange={handleChange}
             options={options}
           />
-          <TextArea className='w-370 mt-16' onChange={e => setDescription(e.target.value)} rows={6} placeholder="Describe the image background." maxLength={2000} />
-        <div className='w-full flex mt-4'>
+          <TextArea className='w-370 mt-8' onChange={e => setDescription(e.target.value)} rows={6} placeholder="Describe the image background." maxLength={2000} />
+        <div className='w-full flex mt-6'>
           <Button className='w-36' type="primary" onClick={() => {back()}}>Back</Button>
           <Button className='w-36 ml-6' type="primary" loading={loading} onClick={() => createMjImgToImg()}>Next</Button>
         </div>

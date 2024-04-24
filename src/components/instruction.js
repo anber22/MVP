@@ -135,7 +135,7 @@ export default function Instruction(data) {
             <Checkbox onChange={checkboxChange}>Do not show next time</Checkbox>
           </div>
           <div className='flex justify-center mt-6'>
-            <Button className={`w-40 ${(step === 0 || step === 4) ? 'hidden' : ''}`} onClick={() =>changeStep(-1)} type="primary">back</Button>
+            <Button className={`w-40 ${(step === 0 || step === 4) ? 'hidden' : ''}`} onClick={() =>changeStep(-1)} type="primary">Back</Button>
             <Button className={`w-40 ${step === 4 ? 'hidden' : 'ml-6'}`} type="primary" onClick={() => changeStep(1)}>Next</Button>
             <Button className={`w-40 ${step === 4 ? '' : 'hidden'}`} type="primary" onClick={() => close()}>Done</Button>
           </div>

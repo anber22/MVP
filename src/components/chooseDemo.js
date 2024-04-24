@@ -18,7 +18,7 @@ export default function ChooseDemo({imgs, chooseDemo, backToPrevious}) {
     <div className='flex content-box flex-col'>
       <div className='flex items-center'>
         Below are the DEMO images. Choose the one you like:
-        <Button className='w-36 help-btn ml-6' type="primary" onClick={() => setShowInstruction(true)}>Help</Button>
+        <div className='w-36 help-btn ml-6 flex items-center justify-center' onClick={() => setShowInstruction(true)}>Help</div>
       </div>
      
       <div className='mt-6'>
