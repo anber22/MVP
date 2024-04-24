@@ -9,6 +9,7 @@ export default function Instruction(data) {
     "Choose the Demo Image that you like.",
     "Draw on the image to  mask the product to let AI replace it with your product."
   ]
+  let endText = "Congrats! It's done. Just download the final images."
   useEffect(() => {
     console.log('弹窗', data)
     if(data.index || data.index === 0 ){
@@ -55,8 +56,7 @@ export default function Instruction(data) {
     } else if(step === 4){
       return (
         <div className='flex items-center mt-12 text-2xl justify-center'>
-           
-           Congrats! It's done. Just download the final images.
+          {endText}
         </div>
       )
     }
