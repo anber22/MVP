@@ -5,7 +5,7 @@ import Instruction from '@/components/instruction.js'
 export default function ChooseDemo({imgs, chooseDemo, backToPrevious}) {
   let [showInstruction, setShowInstruction] = useState(false)
   useEffect(() => {
-     // console.log('进入ChooseDemo', imgs)
+     console.log('进入ChooseDemo', imgs)
   }, [imgs])
   const selectDemo = e => {
      // console.log('选择demo', e)

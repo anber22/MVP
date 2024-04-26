@@ -332,3 +332,25 @@ main{
   background-color: #24BE16 !important;
   padding: 3px 4px;
 }
+.mj-upload-img{
+  width: 160px;
+  height: 160px;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 70px;
+  border: 1px dashed #C0C0C0;
+  color: #999999;
+  font-size: 13px;
+  cursor: pointer;
+}
+.uploaded-img{
+  width: 160px;
+  height: 160px;
+  margin-top: 70px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.upload-img{
+  width: 24px;
+  height: 24px;
+}

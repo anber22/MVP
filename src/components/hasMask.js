@@ -9,6 +9,9 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   const { TextArea } = Input;
   let [showInstruction, setShowInstruction] = useState(false)
   let [loading, setLoading] = useState(false)
+  let myInput = useRef()
+  let [uploadImg, setUploadImg] = useState('')
+  let [uploadLock, setUploadLock] = useState(false)
   const options = [
     {
       value: '0',
@@ -42,7 +45,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   let [schedule2, setSchedule2] = useState(0)
   let [schedule3, setSchedule3] = useState(0)
   const mj = new Mj()
-  let [description, setDescription] = useState()
+  let [description, setDescription] = useState('')
   let [productInfo, setProductInfo] = useState()
   let [position, setPosition] = useState()
   useEffect(() => {
@@ -76,8 +79,11 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   }
   const createMjImgToImg = async () => {
     setLoading(true)
-    
-    await imgToImg(imgs.photoUrl, options[position]?.label, description, getMjImg)
+    if(uploadImg !== ''){
+      getMjImg([{'mjPhotoUrl': uploadImg}])
+    }else{
+      await imgToImg(imgs.photoUrl, options[position]?.label, description, getMjImg)
+    }
   }
   const imgToImg = async (image, preposition, description, callBack) => {
     // console.log('mj参数', image, preposition, description)
@@ -136,53 +142,53 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   //      })
   //    }
   //  ).then((response) => response.json());
-  const result = await fetch(
-    `/mvp/ai/product/photo/${photoId}/mj/text2img`,
-    {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': Cookies.get('token')
-      },
-      body: JSON.stringify({
-        "description": `${description}`,
+    const result = await fetch(
+      `/mvp/ai/product/photo/${photoId}/mj/text2img`,
+      {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': Cookies.get('token')
+        },
+        body: JSON.stringify({
+          "description": `${description}`,
+        })
+      }
+    ).then((response) => response.json());
+
+    if(result.code === 401){
+      Router.push({
+        pathname: '/login', 
       })
     }
-  ).then((response) => response.json());
-
-   if(result.code === 401){
-     Router.push({
-       pathname: '/login', 
-     })
-   }
     // console.log('mj生图结果', result)
-   const timer = setInterval(async () => {
-     const createResult = await fetch(
-       `/mvp/ai/product/photo/mj/task/${result.data.taskId}`,
-       {
-         method: "GET",
-         headers: {
-           'Content-Type': 'application/json',
-           'Authorization': Cookies.get('token')
-         }
-       }
-     ).then((response) => response.json());
-     if(createResult.code === 401){
-       Router.push({
-         pathname: '/login', 
-       })
-     }
-     schedule.current = createResult.data.taskProgress
-     setSchedule3(schedule.current)
-     if(createResult.data.taskProgress === 100){
-      setTimeout(() => {
-        setShowLoading(false)
-      }, 1000);
-     }
-      if(createResult.data.taskStatus === 1){
-        callBack(createResult.data.photos)
-        clearInterval(timer)
+    const timer = setInterval(async () => {
+      const createResult = await fetch(
+        `/mvp/ai/product/photo/mj/task/${result.data.taskId}`,
+        {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': Cookies.get('token')
+          }
+        }
+      ).then((response) => response.json());
+      if(createResult.code === 401){
+        Router.push({
+          pathname: '/login', 
+        })
       }
+      schedule.current = createResult.data.taskProgress
+      setSchedule3(schedule.current)
+      if(createResult.data.taskProgress === 100){
+        setTimeout(() => {
+          setShowLoading(false)
+        }, 1000);
+      }
+        if(createResult.data.taskStatus === 1){
+          callBack(createResult.data.photos)
+          clearInterval(timer)
+        }
     }, 3000);
   } 
   const getMjImg = e => {
@@ -197,6 +203,67 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   }
   const closeModal = () => {
     setShowInstruction(false)
+  }
+  const getImg = () => {
+    console.log('点击上传图片')
+    myInput.click()
+    myInput.addEventListener('change', getFile, false)
+  }
+  const getFile = async e => {
+    if(uploadLock) return
+    console.log('e.target.files[0]', e.target.files[0])
+    var reader = new FileReader();
+    if(e.target.files[0]){
+      let img = e.target.files[0]
+      console.log('size', img)
+      reader.readAsDataURL(img);
+      reader.onload = function (evt) {
+        var replaceSrc = evt.target.result;
+        var imageObj = new Image();
+        imageObj.src = replaceSrc;
+        imageObj.onload =  async () => {
+          console.log(imageObj.width + imageObj.height);
+          if(imageObj.width !== imageObj.height || imageObj.width < 1024 || imageObj.height < 1024){
+            messageApi.open({
+              type: 'error',
+              content: 'Minimum 1024 x 1024, Square Size, JPG or PNG'
+            });
+          }else if((img.size / (1024 * 1024)) > 3){
+            messageApi.open({
+              type: 'error',
+              content: 'The size of the uploaded image cannot exceed 3M'
+            });
+          } else {
+            console.log('拿到文件', img)
+            let result =  await uploadImgFun(img)
+            setUploadImg(result)
+          }
+        };
+      };
+    }
+    e.target.value = ''
+  }
+  const uploadImgFun = async (file) => {
+    setUploadLock(true)
+    const data = new FormData()
+    data.append('file', file, 'aa.jpg')
+    const uploadImg = await fetch(
+      "/mvp/ai/product/file",
+      {
+        method: "POST",
+        headers: {
+          'Authorization': Cookies.get('token')
+        },
+        body: data
+      }
+    ).then((response) => response.json());
+    if(uploadImg.code === 401){
+      Router.push({
+        pathname: '/login', 
+      })
+    }
+    setUploadLock(false)
+    return uploadImg.data.fileUrl
   }
   return (
     <div className='flex content-box'>
@@ -220,19 +287,35 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           <div className='w-36 help-btn ml-6 flex items-center justify-center' onClick={() => setShowInstruction(true)}>Help</div>
         </div>
         <Select
-            className='mt-12 hidden'
-            style={{
-              width: 220,
-            }}
-            onChange={handleChange}
-            options={options}
-          />
-          <TextArea className='w-370 mt-8' onChange={e => setDescription(e.target.value)} rows={6} placeholder="Example: Gradient Blue Background with Flowers" maxLength={2000} />
+          className='mt-12 hidden'
+          style={{
+            width: 220,
+          }}
+          onChange={handleChange}
+          options={options}
+        />
+        <TextArea className='w-370 mt-8' onChange={e => setDescription(e.target.value)} rows={7} placeholder="Example: Gradient Blue Background with Flowers" maxLength={2000} />
         <div className='w-full flex mt-6'>
           <Button className='w-36' type="primary" onClick={() => {back()}}>Back</Button>
           <Button className='w-36 ml-6' type="primary" loading={loading} onClick={() => createMjImgToImg()}>Next</Button>
         </div>
       </div>
+      {
+        uploadImg === '' ? (
+          <div className='mj-upload-img ml-6' onClick={() => getImg()}>
+              (Optional)
+            <br/>
+            Upload an image
+            <br/>
+            <p className='mt-4'>
+              Minimum 1024 x 1024, Square Size
+            </p>
+            <div className='mt-7 flex justify-center' >
+              <img className='upload-img' src="/upload.png" />
+            </div>
+          </div>
+        ) : <img className='uploaded-img ml-6' src={uploadImg} onClick={() => getImg()}/>
+      }
       <Modal width='880px' 
         title={null}
         icon={null} 
@@ -274,6 +357,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
          : 
         ""
       }
+      <input ref={(ref)=>{myInput = ref}} type="file" className='hidden' id="file_input"/>
     </div>
   )
 }
