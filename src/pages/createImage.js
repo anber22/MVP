@@ -21,6 +21,7 @@ function AA (){
   let [sdImg, setSdImg] = useState('')
   let [photoId, setPhotoId] = useState()
   let [productId, setProductId] = useState()
+  let [productName, setProductName] = useState()
   let [showStatus, setShowStatus] = useState(false)
   let [prompt, setPrompt] = useState('')
   const description = ''
@@ -31,11 +32,12 @@ function AA (){
   const router = useRouter();
   const {query} = router
   useEffect(() => {
-    const { hasMask, photoId, productId } = query;
+    const { hasMask, photoId, productId, productName } = query;
     if(photoId){
       setPhotoId(photoId)
       setProductId(productId)
       getPhotoMask(photoId) 
+      setProductName(productName)
     }
   }, [router.query])
   const getPhotoMask = async id => {
@@ -81,9 +83,14 @@ function AA (){
     setMaskInfo(masks)
     setCurrent(1)
   }
-  const getMjNewImg = e => {
+  const getMjNewImg = (e, type) => {
     setMjImgs(e)
-    setCurrent(2)
+    if(type){
+      setMjImg(e[0])
+      setCurrent(3)
+    }else{
+      setCurrent(2)
+    }
   }
   const selectMjImg = e => {
     setMjImg(e)
@@ -105,8 +112,8 @@ function AA (){
   return (
     showStatus ? (
     <div className='flex-grow overflow-y-auto'>
-      <div className='flex justify-between mb-2'>
-        My Product
+      <div className='flex mb-2'>
+        <span className='cursor-pointer mr-4' onClick={() => Router.replace('/')}>My Product</span> {` > `} <span className='ml-4'>{productName}</span>
       </div>
       <Steps
         className='mt-6 mb-6'

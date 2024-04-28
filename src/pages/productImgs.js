@@ -9,12 +9,14 @@ function Index (){
   const router = useRouter();
   const [imgs, setImgs] = useState([])
   const [productId, setProductId] = useState([])
+  const [productName, setProductName] = useState('')
   const [showControlIndex, setShowControlIndex] = useState(-1)
   const [messageApi, contextHolder] = message.useMessage();
   let myInput = useRef()
   useEffect(() => {
-    const { id } = router.query;
+    const { id, name } = router.query;
      // console.log(id)
+    setProductName(name)
     setProductId(id)
     getProductImgs(id)
   }, [])
@@ -43,6 +45,7 @@ function Index (){
         hasMask: true,
         photoId: current.photoId,
         productId: productId,
+        productName: productName,
       }
     })
   }

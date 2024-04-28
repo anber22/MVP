@@ -154,7 +154,8 @@ function Index (){
                   Router.push({
                     pathname: '/productImgs', 
                     query: {
-                      id: record.productId
+                      id: record.productId,
+                      name: record.productName
                     }
                   })}, // 点击行
               };

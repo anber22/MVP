@@ -80,7 +80,8 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   const createMjImgToImg = async () => {
     setLoading(true)
     if(uploadImg !== ''){
-      getMjImg([{'mjPhotoUrl': uploadImg}])
+      console.log('上传mj图片', uploadImg)
+      getMjImg([{'mjPhotoUrl': uploadImg}], true)
     }else{
       await imgToImg(imgs.photoUrl, options[position]?.label, description, getMjImg)
     }
@@ -191,10 +192,9 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
         }
     }, 3000);
   } 
-  const getMjImg = e => {
+  const getMjImg = (e, type) => {
     setLoading(false)
-
-    gotMjImg(e)
+    gotMjImg(e, type)
     getPrompt(options[position]?.label + ' ' + description)
   }
   const back = () => {
