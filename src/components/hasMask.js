@@ -1,4 +1,4 @@
-import { Select, Input, Button, Modal, Progress, Steps } from 'antd';
+import { Select, Input, Button, Modal, Progress, Steps, message } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import Mj from '@/components/mj';
 import {ref, useState, useRef, useEffect} from 'react';
@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import Instruction from '@/components/instruction.js'
 export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPrompt, productId, photoId}) {
   const { TextArea } = Input;
+  const [messageApi, contextHolder] = message.useMessage();
   let [showInstruction, setShowInstruction] = useState(false)
   let [loading, setLoading] = useState(false)
   let myInput = useRef()
@@ -251,6 +252,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   }
   return (
     <div className='flex content-box'>
+       {contextHolder}
       {/* <div className='w-80 flex flex-col'>
         <div className='flex h-10 items-center'>
           Your Image
