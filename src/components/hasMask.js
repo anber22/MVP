@@ -49,7 +49,6 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   let [productInfo, setProductInfo] = useState()
   let [position, setPosition] = useState()
   useEffect(() => {
-     // console.log('进入hasmask', imgs, masks)
     getProductInfo()
   }, [])
   const getProductInfo = async () => {
@@ -69,25 +68,21 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
       })
       return
     }else if(result.code === 200){
-      console.log('xxxxx', result)
       setProductInfo(result.data)
     }
   }
   const handleChange = e => {
-     // console.log('eeee', e)
     setPosition(e)
   }
   const createMjImgToImg = async () => {
     setLoading(true)
     if(uploadImg !== ''){
-      console.log('上传mj图片', uploadImg)
       getMjImg([{'mjPhotoUrl': uploadImg}], true)
     }else{
       await imgToImg(imgs.photoUrl, options[position]?.label, description, getMjImg)
     }
   }
   const imgToImg = async (image, preposition, description, callBack) => {
-    // console.log('mj参数', image, preposition, description)
     schedule.current = 0
     loadingStep.current = 0
     setSchedule1(schedule.current)
@@ -99,18 +94,14 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
         if(loadingStep.current === 0){
           schedule.current = schedule.current + 10
         }
-        console.log('xxx', schedule.current, schedule1)
         if(schedule.current > 100 && loadingStep.current === 0){
           clearInterval(loadingTimer1)
           schedule.current = 0
           loadingStep.current = 1
           let loadingTimer2 = setInterval(() => {
-            console.log('xxx第二xx', loadingStep.current)
             if(loadingStep.current === 1){
-              console.log('xxx第二', schedule.current)
               schedule.current = schedule.current + 10
             }
-            console.log('xxx2', schedule.current, schedule2)
             if(schedule.current > 100 && loadingStep.current === 1){
               schedule.current = 0
               loadingStep.current = 2
@@ -156,13 +147,12 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
         })
       }
     ).then((response) => response.json());
-
+    console.log('text2img', result.data, result.data.taskId)
     if(result.code === 401){
       Router.push({
         pathname: '/login', 
       })
     }
-    // console.log('mj生图结果', result)
     const timer = setInterval(async () => {
       const createResult = await fetch(
         `/mvp/ai/product/photo/mj/task/${result.data.taskId}`,
@@ -198,31 +188,26 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
     getPrompt(options[position]?.label + ' ' + description)
   }
   const back = () => {
-    console.log('返回')
     backToPrevious()
   }
   const closeModal = () => {
     setShowInstruction(false)
   }
   const getImg = () => {
-    console.log('点击上传图片')
     myInput.click()
     myInput.addEventListener('change', getFile, false)
   }
   const getFile = async e => {
     if(uploadLock) return
-    console.log('e.target.files[0]', e.target.files[0])
     var reader = new FileReader();
     if(e.target.files[0]){
       let img = e.target.files[0]
-      console.log('size', img)
       reader.readAsDataURL(img);
       reader.onload = function (evt) {
         var replaceSrc = evt.target.result;
         var imageObj = new Image();
         imageObj.src = replaceSrc;
         imageObj.onload =  async () => {
-          console.log(imageObj.width + imageObj.height);
           if(imageObj.width !== imageObj.height || imageObj.width < 1024 || imageObj.height < 1024){
             messageApi.open({
               type: 'error',
@@ -234,7 +219,6 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
               content: 'The size of the uploaded image cannot exceed 3M'
             });
           } else {
-            console.log('拿到文件', img)
             let result =  await uploadImgFun(img)
             setUploadImg(result)
           }
