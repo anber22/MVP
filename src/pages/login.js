@@ -33,9 +33,7 @@ export default function Canvas() {
       
       if(result.code === 200){
         Cookies.set('token', result.token);
-        Router.push({
-          pathname: '/', 
-        })
+        await getUserInfo()
       }else{
         console.log('登录失败')
         messageApi.open({
@@ -43,6 +41,24 @@ export default function Canvas() {
           content: result.msg,
         });
       }
+    }
+  }
+  const getUserInfo = async () => {
+    const result = await fetch(
+      "/mvp/ai/user/info",
+      {
+        method: "get",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': Cookies.get('token')
+        }
+      }
+    ).then((response) => response.json());
+    if(result.code === 200){
+      Cookies.set('userInfo', JSON.stringify(result.data));
+      Router.push({
+        pathname: '/', 
+      })
     }
   }
   return (

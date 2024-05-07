@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  PushpinTwoTone,
+  CaretDownOutlined,
   ShoppingTwoTone,
   ThunderboltTwoTone,
 } from '@ant-design/icons';
-import { Layout, Menu, Button, theme } from 'antd';
+import { Layout, Menu, Button, theme, Popover } from 'antd';
 import Router from 'next/router';
+
 const { Header, Sider, Content } = Layout;
 export default function Template (props) {
   const [collapsed, setCollapsed] = useState(true);
+  let [userInfo, setUserInfo] = useState(true);
+  useEffect(() => {
+    if(Cookies.get('userInfo')){
+      setUserInfo(JSON.parse(Cookies.get('userInfo')))
+    }
+  }, [])
   function getItem (label, key, icon, children) {
     return {
       key,
@@ -18,6 +26,18 @@ export default function Template (props) {
       children,
       label,
     };
+  }
+  const popoverContent = (
+    <div>
+      <p className='m-1 px-4 cursor-pointer log-out' onClick={() => logOut()}>Log out</p>
+    </div>
+  );
+  const logOut = () => {
+    Cookies.remove('userInfo')
+    Cookies.remove('token')
+    Router.push({
+      pathname: '/login', 
+    })
   }
   const items = [
     getItem('My Product', '/', <img className='w-4 h-4' src="/product.png"/>),
@@ -78,7 +98,13 @@ export default function Template (props) {
                 height: 64,
               }}
             />
-            <div className='mr-10'>
+            <div className='flex items-center'>
+              <Popover content={popoverContent} trigger="click">
+                <div className='flex items-center mr-10 h-12 cursor-pointer user-info'>
+                  {userInfo.nickName}
+                  <CaretDownOutlined className='ml-2'/>
+                </div>
+              </Popover>
             </div>
           </Header>
           <Content

@@ -1,6 +1,6 @@
 import { Select, Input, Button , Popover, Modal, Progress } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import {ref, useState, useRef} from 'react';
+import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 import Instruction from '@/components/instruction.js'
 import Router from "next/router"
@@ -11,6 +11,13 @@ export default function SegmentAnything({getMask, picture, photoId}) {
   let [showInstruction, setShowInstruction] = useState(false)
   const { TextArea } = Input;
   let [loading, setLoading] = useState(false)
+  
+  useEffect(() => {
+    if(Cookies.get('userInfo') && !JSON.parse(Cookies.get('userInfo')).guideStatus){
+      setShowInstruction(true)
+      updateUserInfo()
+    }
+  }, [])
   const options = [
     {
       value: '0',
@@ -43,7 +50,24 @@ export default function SegmentAnything({getMask, picture, photoId}) {
   let [schedule1, setSchedule1] = useState(0)
   let [schedule2, setSchedule2] = useState(0)
   let [schedule3, setSchedule3] = useState(0)
-
+  const updateUserInfo = async () => {
+    const result = await fetch(
+      "/mvp/ai/user/info",
+      {
+        method: "put",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': Cookies.get('token')
+        },
+        body: JSON.stringify({guideStatus: 1})
+      }
+    ).then((response) => response.json());
+    if(result.code === 200){
+      let user = JSON.parse(Cookies.get('userInfo'))
+      user.guideStatus = 1
+      Cookies.set('userInfo', JSON.stringify(user))
+    }
+  }
   const content = (
     <div>
       <p>Example:</p>

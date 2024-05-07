@@ -4,6 +4,7 @@ import Mj from '@/components/mj';
 import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 import Cookies from 'js-cookie';
+import Router from "next/router"
 import Instruction from '@/components/instruction.js'
 export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPrompt, productId, photoId}) {
   const { TextArea } = Input;

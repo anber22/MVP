@@ -179,8 +179,8 @@ function Index (){
                 />
                 {
                   <div className={'flex absolute img-mask' + (showControlIndex === index ? '' : ' hidden')}>
-                    <Button className='w-20' type="primary" onClick={() => toPainting(item)}>Select</Button>
-                    <Button className='w-20 mt-2 remove-btn' onClick={() => deleteImg(item, index)}>Delete</Button>
+                    <Button className='w-26' type="primary" onClick={() => toPainting(item)}>Select</Button>
+                    <Button className='w-26 mt-2 remove-btn' onClick={() => deleteImg(item, index)}>Delete</Button>
                   </div>
                 }
                

@@ -3,6 +3,7 @@ import {ref, useState, useRef, useEffect} from 'react';
 import Canvas from '@/components/canvas';
 import CreateProduct from '@/components/product/createProduct.js';
 import EditProduct from '@/components/product/editImage.js';
+
 import Router from "next/router"
 import Cookies from 'js-cookie';
 function Index (){

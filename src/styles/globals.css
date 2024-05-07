@@ -248,7 +248,7 @@ main{
   border: none;
 }
 .remove-btn:hover{
-  color: #FFFFFF !important;
+  color: grey !important;
 }
 
 .address-info-box{
@@ -337,7 +337,7 @@ main{
   height: 160px;
   padding: 10px;
   border-radius: 6px;
-  margin-top: 70px;
+  margin-top: 58px;
   border: 1px dashed #C0C0C0;
   color: #999999;
   font-size: 13px;
@@ -354,3 +354,16 @@ main{
   width: 24px;
   height: 24px;
 }
+.log-out:hover{
+  background-color: #e7f5ff;
+}
+.ant-popover-inner{
+  padding: 6px 0 !important;
+}
+.user-info{
+  background-color: #1677ff;
+  padding: 0px 10px;
+  border-radius: 6px;
+  color: #FFFFFF;
+}
+
