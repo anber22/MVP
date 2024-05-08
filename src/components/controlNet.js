@@ -322,7 +322,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
               "sd_model_checkpoint": "moomooeCommerce_v4.safetensors [87e267a70b]"
             },
             "override_settings_restore_afterwards": true,
-            "prompt": prompt + ", Product Photography, Film Grain, (masterpiece:1.33),(bestquality:1.33),(ultra-detailed:1.21),studio photography,(realistic:1.21), <lora:MooMoo-Product Protography:1>,<lora:LCM-SD1.5:1>,([Wall wash lighting|Followspot lighting|front lighting|Backlighting|Glare-free lighting]),",
+            "prompt": prompt + ", Product Photography, Film Grain, (masterpiece:1.33),(bestquality:1.33),(ultra-detailed:1.21),studio photography,(realistic:1.21),([Wall wash lighting|Followspot lighting|front lighting|Backlighting|Glare-free lighting]),",
             "resize_mode": 0,
             "restore_faces": false,
             "s_churn": 0,
