@@ -324,15 +324,15 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           </div>
           <div className='line-box flex flex-col flex-1 h-44 mt-16 mx-6'>
             <div className='flex flex-row flex-auto items-center ml-8'>
-              <p className='mr-8 w-72 flex justify-end'>Process Requirements</p>
+              <p className='mr-8 w-52 flex justify-end'>Process Requirements</p>
               <Progress strokeLinecap="butt" strokeColor={'#CAE9FF'} size={[400, 10]} percent={schedule1} />
             </div>
             <div className='flex flex-row flex-auto items-center ml-8'>
-              <p className='mr-8 w-72 flex justify-end'>Initial Drafts</p>
+              <p className='mr-8 w-52 flex justify-end'>Initial Drafts</p>
               <Progress strokeLinecap="butt" strokeColor={'#5FA8D3'} size={[400, 10]} percent={schedule2} />
             </div>
             <div className='flex flex-row flex-auto items-center ml-8'> 
-              <p className='mr-8 w-72 flex justify-end' >Generate Ideas</p>
+              <p className='mr-8 w-52 flex justify-end' >Generate Ideas</p>
               <Progress strokeLinecap="butt" strokeColor={'#3B73E8'} size={[400, 10]} percent={schedule3} />
             </div>
           </div>
