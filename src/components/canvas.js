@@ -1,7 +1,8 @@
-import { Button, Slider } from 'antd';
+import { Button, Slider, message } from 'antd';
 import {ref, useState, useEffect, useRef, use} from 'react';
 
 function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
+  const [messageApi, contextHolder] = message.useMessage();
   let myInput = null
   let img = useRef()
   let [baseImg, setBaseImg] = useState()
@@ -393,6 +394,14 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
   }
   const nextStep = () =>{
     if((actionType === 'line' && !isAdjust)){
+      if(actionType !== 'dot' && !mask){
+        messageApi.open({
+          type: 'error',
+          content: 'You haven’t drawn on the picture to mask the product yet. Click HELP if you don’t understand. ',
+          duration: 6
+        });
+        return
+      }
       adjustTarget()
     }else{
       step1(img.current.src, (actionType === 'dot' ? getPoints() : mask), (isAdjust ? {scale, endPointX, endPointY} : false))
@@ -401,6 +410,7 @@ function Canvas({typeIndex ,actionType, step1, picture, loading, productPic}) {
 
   return (
     <div className='flex flex-col' >
+      {contextHolder}
       { actionType === 'line' ?  
         <div className='flex'>
           {

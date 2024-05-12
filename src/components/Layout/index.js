@@ -99,7 +99,7 @@ export default function Template (props) {
               }}
             />
             <div className='flex items-center'>
-              <Popover content={popoverContent} trigger="click">
+              <Popover className='user-popover' content={popoverContent} trigger="click">
                 <div className='flex items-center mr-10 h-12 cursor-pointer user-info'>
                   {userInfo.nickName}
                   <CaretDownOutlined className='ml-2'/>

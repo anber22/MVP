@@ -420,7 +420,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
 
       </div>
       <canvas id='scale-canvas' ref={scaleDrawing} className='hidden' >xxxxx</canvas>
-      <Modal width='880px' 
+      <Modal width='980px' 
         title={null}
         icon={null} 
         closeIcon={null}
@@ -441,15 +441,15 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
           </div>
           <div className='line-box flex flex-col flex-1 h-44 mt-16 mx-6'>
             <div className='flex flex-row flex-auto items-center ml-8'>
-              <p className='mr-8 w-52 flex justify-end'>Load Modules</p>
+              <p className='mr-8 w-72 flex justify-end'>Load Modules</p>
               <Progress strokeLinecap="butt" strokeColor={'#CAE9FF'} size={[400, 10]} percent={schedule1} />
             </div>
             <div className='flex flex-row flex-auto items-center ml-8'>
-              <p className='mr-8 w-52 flex justify-end'>AI Drawing</p>
+              <p className='mr-8 w-72 flex justify-end'>AI Drawing</p>
               <Progress strokeLinecap="butt" strokeColor={'#5FA8D3'} size={[400, 10]} percent={schedule2} />
             </div>
             <div className='flex flex-row flex-auto items-center ml-8'> 
-              <p className='mr-8 w-52 flex justify-end' >Finalize Images</p>
+              <p className='mr-8 w-72 flex justify-end' >Finalize Images</p>
               <Progress strokeLinecap="butt" strokeColor={'#3B73E8'} size={[400, 10]} percent={schedule3} />
             </div>
           </div>
