@@ -136,8 +136,21 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
   //      })
   //    }
   //  ).then((response) => response.json());
+    // const result = await fetch(
+    //   `/mvp/ai/product/photo/${photoId}/mj/text2img`,
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Authorization': Cookies.get('token')
+    //     },
+    //     body: JSON.stringify({
+    //       "description": `${description}`,
+    //     })
+    //   }
+    // ).then((response) => response.json());
     const result = await fetch(
-      `/mvp/ai/product/photo/${photoId}/mj/text2img`,
+      `/mvp/ai/product/photo/${photoId}/sd/txt2img`,
       {
         method: "POST",
         headers: {
@@ -145,8 +158,55 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           'Authorization': Cookies.get('token')
         },
         body: JSON.stringify({
-          "description": `${description}`,
-        })
+          "batch_size": 4,
+          "cfg_scale": 7,
+          "comments": {},
+          "denoising_strength": 0.7,
+          "disable_extra_networks": false,
+          "do_not_save_grid": false,
+          "do_not_save_samples": false,
+          "enable_hr": false,
+          "height": 512,
+          "hr_negative_prompt": "",
+          "hr_prompt": "",
+          "hr_resize_x": 0,
+          "hr_resize_y": 0,
+          "hr_scale": 2,
+          "hr_second_pass_steps": 0,
+          "hr_upscaler": "Latent",
+          "n_iter": 1,
+          "negative_prompt": "",
+          "override_settings": {
+              "sd_model_checkpoint": "moomooeCommerce_v4.safetensors [87e267a70b]"
+          },
+          "override_settings_restore_afterwards": true,
+          "prompt": description,
+          "restore_faces": false,
+          "s_churn": 0,
+          "s_min_uncond": 0,
+          "s_noise": 1,
+          "s_tmax": null,
+          "s_tmin": 0,
+          "sampler_name": "DPM++ 2M Karras",
+          "script_args": [
+      
+      
+          ],
+          "script_name": null,
+          "seed": -1,
+          "seed_enable_extras": true,
+          "seed_resize_from_h": -1,
+          "seed_resize_from_w": -1,
+          "steps": 20,
+          "styles": [
+      
+      
+          ],
+          "subseed": -1,
+          "subseed_strength": 0,
+          "tiling": false,
+          "width": 1024
+      })
       }
     ).then((response) => response.json());
     if(result.code === 401){
@@ -156,7 +216,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
     }
     const timer = setInterval(async () => {
       const createResult = await fetch(
-        `/mvp/ai/product/photo/mj/task/${result.data.taskId}`,
+        `/mvp/ai/product/photo/sd/task/${result.data.taskId}`,
         {
           method: "GET",
           headers: {
@@ -170,17 +230,17 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           pathname: '/login', 
         })
       }
-      schedule.current = createResult.data.taskProgress
+      schedule.current = createResult.data.progressBar
       setSchedule3(schedule.current)
-      if(createResult.data.taskProgress === 100){
+      if(createResult.data.progressBar === 100){
         setTimeout(() => {
           setShowLoading(false)
         }, 1000);
       }
-        if(createResult.data.taskStatus === 1){
-          callBack(createResult.data.photos)
-          clearInterval(timer)
-        }
+      if(createResult.data.resultstr === 1){
+        callBack(createResult.data.resultstr.images)
+        clearInterval(timer)
+      }
     }, 3000);
   } 
   const getMjImg = (e, type) => {
