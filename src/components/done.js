@@ -6,11 +6,9 @@ export default function Done({imgs, chooseSdImg}) {
   const [sdImgs, setSdImgs] = useState('')
   let [showInstruction, setShowInstruction] = useState(false)
   useEffect(() => {
-    //  // console.log('进入Done', imgs)
     setSdImgs(imgs())
   }, [imgs])
   const selectDemo = e => {
-     // console.log('选择demo', e)
     chooseSdImg(e)
   }
   const closeModal = () => {

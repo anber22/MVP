@@ -17,8 +17,6 @@ request.defaults.headers['Cache-Control'] = 'no-cache'
 // 请求拦截器
 request.interceptors.request.use(
   config => {
-    
-   console.log('请求拦截', config)
     return config
   },
   error => {
@@ -30,7 +28,6 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   response => {
-    console.log('响应', response)
     // TODO：接口响应了需要去删除掉对应的controller
     // CancelRequest.deleteControllerOne(response.config.url, true)
   
@@ -39,7 +36,6 @@ request.interceptors.response.use(
   error => {
     // 需要处理一下错误是不是由于取消接口请求造成的
     if (error.code === 'ERR_CANCELED') {
-      console.log('请求已被取消')
     } else {
       return Promise.reject(error)
     }

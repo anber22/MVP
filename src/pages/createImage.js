@@ -62,7 +62,6 @@ function AA (){
     setShowStatus(true)
   }
   const getMask = async (masks) => {
-    console.log('xxx', masks)
     const photos = await fetch(
       `/mvp/product/photo/${photoId}/mask`,
       {

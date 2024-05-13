@@ -15,7 +15,6 @@ function Index (){
   let myInput = useRef()
   useEffect(() => {
     const { id, name } = router.query;
-     // console.log(id)
     setProductName(name)
     setProductId(id)
     getProductImgs(id)
@@ -50,7 +49,6 @@ function Index (){
     })
   }
   const deleteImg = async (item, index) => {
-    console.log(item)
     const result = await fetch(
       `/mvp/product/photo/${item.photoId}`,
       {
@@ -66,7 +64,6 @@ function Index (){
         pathname: '/login', 
       })
     }
-    console.log('删除图片结果', result)
     if(result.code === 401){
       Router.push({
         pathname: '/login', 
@@ -87,16 +84,13 @@ function Index (){
     const resultArr = await e.target.files
     // uploadImg(e.target.files[0])
     var reader = new FileReader();
-    console.log('拿到文件', imgs)
     for(let item of resultArr){
-      console.log('size', item)
       reader.readAsDataURL(item);
       reader.onload = function (evt) {
           var replaceSrc = evt.target.result;
           var imageObj = new Image();
           imageObj.src = replaceSrc;
           imageObj.onload =  async () => {
-            console.log(imageObj.width + imageObj.height);
             if(imageObj.width !== imageObj.height || imageObj.width < 1024 || imageObj.height < 1024){
               messageApi.open({
                 type: 'error',

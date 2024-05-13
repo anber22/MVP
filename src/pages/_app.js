@@ -4,7 +4,6 @@ import Login from "@/pages/login.js"
 import {useRouter} from 'next/router'
 export default function App({ Component, pageProps }) {
   const router = useRouter()
-   // console.log('router', router)
   const getRouter = () => {
     if(router.route === '/login'){
       return <Login />

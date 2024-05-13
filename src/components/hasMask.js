@@ -149,7 +149,6 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
         })
       }
     ).then((response) => response.json());
-    console.log('text2img', result.data, result.data.taskId)
     if(result.code === 401){
       Router.push({
         pathname: '/login', 

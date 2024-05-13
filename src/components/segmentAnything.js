@@ -87,18 +87,14 @@ export default function SegmentAnything({getMask, picture, photoId}) {
         if(loadingStep.current === 0){
           schedule.current = schedule.current + 10
         }
-        console.log('xxx', schedule.current, schedule1)
         if(schedule.current > 100 && loadingStep.current === 0){
           clearInterval(loadingTimer1)
           schedule.current = 0
           loadingStep.current = 1
           let loadingTimer2 = setInterval(() => {
-            console.log('xxx第二xx', loadingStep.current)
             if(loadingStep.current === 1){
-              console.log('xxx第二', schedule.current)
               schedule.current = schedule.current + 10
             }
-            console.log('xxx2', schedule.current, schedule2)
             if(schedule.current > 100 && loadingStep.current === 1){
               schedule.current = 0
               loadingStep.current = 2

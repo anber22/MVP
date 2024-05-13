@@ -2,7 +2,6 @@ import Router from "next/router"
 import Cookies from 'js-cookie';
 export default class Mj{
   async imgToImg(image, preposition, description, callBack) {
-     // console.log('mj参数', image, preposition, description)
     const result = await fetch(
       `/mvp/ai/product/photo/${1}/mj/img2img`,
       {
@@ -25,7 +24,6 @@ export default class Mj{
         pathname: '/login', 
       })
     }
-     // console.log('mj生图结果', result)
     const timer = setInterval(async () => {
       const createResult = await fetch(
         `/mvp/ai/product/photo/mj/task/${result.data.taskId}`,

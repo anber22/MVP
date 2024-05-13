@@ -60,16 +60,11 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
   }
   const myElement = document.getElementById('scale-canvas');
   const scaleImg = async (img, adjust, isBlack) => {
-    console.log('img', scaleState, scaleDrawing)
     let image = new Image();
     setScaleState(scaleDrawing)
-    
-    console.log('元素', document, myElement)
     let scaleContext = myElement.getContext('2d');
-    console.log('scaleContext', scaleContext)
     let promise = new Promise((resolve)=>{
       image.onload = () => {
-        console.log('onload', scaleState, scaleDrawing)
         myElement.width = (image.width >= 1024 ? image.width : 1024);
         myElement.height = (image.height >= 1024 ? image.height : 1024);
         if(isBlack){
@@ -77,7 +72,6 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
           scaleContext.fillStyle="black";
           scaleContext.fill();
         }
-        console.log('adjust', adjust)
         if(!adjust.endPointX){
           scaleContext.drawImage(image, 0, 0, image.width * (adjust.scale.current / 100), image.height * (adjust.scale.current / 100));
         }else{
@@ -90,7 +84,6 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
     return promise
   }
   const step1 = async (img, mask, adjust) => {
-    console.log('进入step')
     schedule.current = 0
     loadingStep.current = 0
     setSchedule1(schedule.current)
@@ -102,11 +95,9 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         if(loadingStep.current === 0){
           schedule.current = schedule.current + 10
         }
-        console.log('xxx', schedule.current > 100, loadingStep.current === 0)
         if(schedule.current > 100 && loadingStep.current === 0){
           schedule.current = 0
           loadingStep.current = 1
-          console.log('结束')
           resolve()
           clearInterval(loadingTimer1)
         }else{
@@ -115,8 +106,6 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
       }, 200);
     });
     await promise
-    
-    
     let res1 = await urlToBase64(segmentMask)
     let res2 = await urlToBase64(imgs.maskShowUrl)
     if(adjust){
@@ -246,11 +235,9 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         if(result1.code === 200 && result1.data.progressBar === 100 && !lock){
           lock = true
           clearInterval(timer1)
-          console.log('首次进来', timer1)
           schedule.current = 0
           loadingStep.current = 2
           endResult.src = 'data:image/png;base64,' + result1.data.resultStr.images[0]
-          // console.log('xxx', fullMask)
           let data2 =      {
             "alwayson_scripts": {
               "controlnet": {
@@ -396,7 +383,6 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
     myInput.addEventListener('change', getFile, false)
   }
   const getFile = e => {
-    console.log('getFile', e)
     controlNetImg = e
   }
   const closeModal = () => {

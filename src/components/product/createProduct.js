@@ -361,14 +361,12 @@ export default function ChooseDemo({backToList}) {
   
   const { TextArea } = Input;
   states = states.map(item => {return {value: item.name, label: item.name}})
-  console.log('50', states)
   let [selectImgType, setSelectImgType] = useState(1)
   let [selectImgs, setSelectImgs] = useState([])
   let images = []
   const [messageApi, contextHolder] = message.useMessage();
   let [loading, setLoading] = useState(false)
   const categoryChange = e => {
-    console.log('类型切换', e)
   }
   const addressInfo = useRef({})
 
@@ -380,7 +378,6 @@ export default function ChooseDemo({backToList}) {
       await createdProduct(data)
     }else {
       const addressRes = await addressInfo.current.validateFields()
-      console.log('地址表单信息', addressRes)
       if(!addressRes.address){
         return
       }else{
@@ -389,8 +386,6 @@ export default function ChooseDemo({backToList}) {
       }
     }
     setLoading(false)
-
-    console.log('提交表单', data)
   }
   const createdProduct = async (data) => {
     const result = await fetch(
@@ -409,9 +404,7 @@ export default function ChooseDemo({backToList}) {
         pathname: '/login', 
       })
     }
-    console.log('新增图片结果', result)
     if(result.code === 200){
-      console.log('新增商品成功', result)
       goBack(true)
     }
   }
@@ -424,17 +417,14 @@ export default function ChooseDemo({backToList}) {
     }
   }
   const getFile = async e => {
-    console.log('e.target.files[0]', e.target)
     var reader = new FileReader();
     for(let item of e.target.files){
-      console.log('size', item)
       reader.readAsDataURL(item);
       reader.onload = function (evt) {
           var replaceSrc = evt.target.result;
           var imageObj = new Image();
           imageObj.src = replaceSrc;
           imageObj.onload =  async () => {
-            console.log(imageObj.width + imageObj.height);
             if(imageObj.width !== imageObj.height || imageObj.width < 1024 || imageObj.height < 1024){
               messageApi.open({
                 type: 'error',
@@ -447,15 +437,9 @@ export default function ChooseDemo({backToList}) {
               });
             } else {
               const result = await uploadImg(item)
-              
-              console.log('拿到文件', images)
-      
               images.push(result)
-              
               selectImgs = images
               setSelectImgs(images)
-      
-              console.log('拿到文件', images, selectImgs)
             }
           };
       };
@@ -487,7 +471,6 @@ export default function ChooseDemo({backToList}) {
     backToList(e)
   }
   const changeType = e => {
-    console.log('xxxx', e)
     setSelectImgType(e.target.value)
   }
   return (

@@ -44,7 +44,6 @@ export default function Template (props) {
     // 
   ];
   const selectMenu = e => {
-    console.log('eeee', e)
     Router.push({
       pathname: e.key, 
     })

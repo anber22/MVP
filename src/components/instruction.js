@@ -11,7 +11,6 @@ export default function Instruction(data) {
   ]
   let endText = "Congrats! It's done. Just download the final images."
   useEffect(() => {
-    console.log('弹窗', data)
     if(data.index || data.index === 0 ){
       setStep(data.index)
     }
@@ -65,12 +64,10 @@ export default function Instruction(data) {
     data.closeModal()
   }
   const changeStep = (num) => {
-    console.log('change', step, num)
     setStep(step + num)
     
   }
   const checkboxChange = e => {
-    console.log('eeee', e.target.checked)
     Cookies.set('showInstruction', !e.target.checked);
   }
   return (

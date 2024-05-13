@@ -18,7 +18,6 @@ module.exports = (req, res) => {
       target = 'https://aiproshots-image.s3.amazonaws.com/'
       Reflect.set(rewrite, '^/img/', '/')
     }
-    console.log('重定向', )
     // 创建代理对象并转发请求
     createProxyMiddleware({
         target,

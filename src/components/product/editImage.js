@@ -363,7 +363,6 @@ export default function ChooseDemo({backToList, productId}) {
   }, [])
   const { TextArea } = Input;
   states = states.map(item => {return {value: item.name, label: item.name}})
-  console.log('50', states)
   let [selectImgType, setSelectImgType] = useState(1)
   let [selectImgs, setSelectImgs] = useState([])
   let [showForm, setShowForm] = useState(false)
@@ -373,7 +372,6 @@ export default function ChooseDemo({backToList, productId}) {
   const [messageApi, contextHolder] = message.useMessage();
   let [loading, setLoading] = useState(false)
   const categoryChange = e => {
-    console.log('类型切换', e)
   }
   const addressInfo = useRef({})
   const getProductInfo = async () => {
@@ -387,7 +385,6 @@ export default function ChooseDemo({backToList, productId}) {
         },
       }
     ).then((response) => response.json());
-    console.log('xxxxx', result)
     if(result.code === 401){
       Router.push({
         pathname: '/login', 
@@ -397,7 +394,6 @@ export default function ChooseDemo({backToList, productId}) {
       result.data.category = 'Skin Care'
     }
     setFormData(result.data)
-    console.log('商品详情', result.data)
     setShowForm(true)
   }
   const onFinish = async e => {
@@ -406,8 +402,6 @@ export default function ChooseDemo({backToList, productId}) {
     data = {...data}
     await editProduct(data)
     setLoading(false)
-
-    console.log('提交表单', data)
   }
   const editProduct = async (data) => {
     data.category = 0
@@ -427,9 +421,7 @@ export default function ChooseDemo({backToList, productId}) {
         pathname: '/login', 
       })
     }
-    console.log('新增图片结果', result)
     if(result.code === 200){
-      console.log('新增商品成功', result)
       goBack(true)
     }
   }
@@ -442,9 +434,7 @@ export default function ChooseDemo({backToList, productId}) {
     }
   }
   const getFile = async e => {
-    console.log('e.target.files[0]', e.target)
     for(let item of e.target.files){
-      console.log('size', item.size / (1024 * 1024))
       if((item.size / (1024 * 1024)) > 3){
         messageApi.open({
           type: 'error',
@@ -452,15 +442,9 @@ export default function ChooseDemo({backToList, productId}) {
         });
       } else {
         const result = await uploadImg(item)
-        
-        console.log('拿到文件', images)
-
         images.push(result)
-        
         selectImgs = images
         setSelectImgs(images)
-
-        console.log('拿到文件', images, selectImgs)
       }
     }
     e.target.value = ''
@@ -489,7 +473,6 @@ export default function ChooseDemo({backToList, productId}) {
     backToList(e)
   }
   const changeType = e => {
-    console.log('xxxx', e)
     setSelectImgType(e.target.value)
   }
   return (

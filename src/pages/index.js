@@ -45,7 +45,6 @@ function Index (){
     getProducts()
   }, [])
   const editProduct = (e, productId) => {
-    console.log('删除')
     e.stopPropagation() // 阻止冒泡
     setCurrentProduct(productId)
     setShowEditProduct(true)
@@ -68,7 +67,6 @@ function Index (){
       })
     }
     setLoading(false)
-     // console.log('获取商品列表', products)
      let temp = products.rows.map(item => {
       item.createDate = getDate(item.createDate)
       return item
@@ -93,14 +91,12 @@ function Index (){
     setShowCreateProduct(true)
   }
   const backToList = (reload) => {
-    console.log('reload', reload)
     if(showCreateProduct) setShowCreateProduct(false)
     if(showEditProduct) setShowEditProduct(false)
     if(reload) getProducts()
   }
   const deleteProduct = async (e, id, product) => {
     e.stopPropagation() // 阻止冒泡
-    console.log('delete', e, id, product)
     modal.confirm({
       title: '',
       icon: null,
@@ -119,7 +115,6 @@ function Index (){
             }
           }
         ).then((response) => response.json());
-        console.log('res', delRes)
         if(delRes.code === 200){
           getProducts()
         }

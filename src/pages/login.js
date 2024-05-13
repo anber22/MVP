@@ -10,7 +10,6 @@ export default function Canvas() {
   let [loading, setLoading] = useState(false)
   const login = async (e) => {
     const loginRes = await loginInfo.current.validateFields()
-    console.log('地址表单信息', loginRes)
     setLoading(true)
     if(loginRes.username){
       const result = await fetch(
@@ -28,14 +27,12 @@ export default function Canvas() {
           pathname: '/login', 
         })
       }
-      console.log('登录', result)
       setLoading(false)
       
       if(result.code === 200){
         Cookies.set('token', result.token);
         await getUserInfo()
       }else{
-        console.log('登录失败')
         messageApi.open({
           type: 'error',
           content: result.msg,
