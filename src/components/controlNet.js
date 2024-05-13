@@ -406,7 +406,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
 
       </div>
       <canvas id='scale-canvas' ref={scaleDrawing} className='hidden' >xxxxx</canvas>
-      <Modal width='880px' 
+      <Modal width='980px' 
         title={null}
         icon={null} 
         closeIcon={null}

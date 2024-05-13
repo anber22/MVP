@@ -292,7 +292,7 @@ export default function SegmentAnything({getMask, picture, photoId}) {
             <Progress className='progress-3' strokeLinecap="butt" strokeColor={'#CAE9FF'} trailColor={'white'} type="circle"  size={160}  percent={schedule1} format={e => loadingStep.current === 0 ? (e + '%') : '' } >
             </Progress>
           </div>
-          <div className='line-box flex flex-col flex-1 h-44 mt-16 mx-6'>
+          <div className='line-box flex flex-col flex-1 h-44 mt-16 mx-12'>
             <div className='flex flex-row flex-auto items-center ml-8'>
               <p className='mr-8 w-52 flex justify-end'>Scan Image</p>
               <Progress strokeLinecap="butt" size={[400, 10]} percent={schedule1} />

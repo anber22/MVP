@@ -357,7 +357,7 @@ main{
 .log-out:hover{
   background-color: #e7f5ff;
 }
-.ant-popover-inner{
+.user-popover .ant-popover-inner{
   padding: 6px 0 !important;
 }
 .user-info{
