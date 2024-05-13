@@ -167,6 +167,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           "do_not_save_samples": false,
           "enable_hr": false,
           "height": 512,
+          "weight": 512,
           "hr_negative_prompt": "",
           "hr_prompt": "",
           "hr_resize_x": 0,
@@ -230,17 +231,20 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           pathname: '/login', 
         })
       }
-      schedule.current = createResult.data.progressBar
-      setSchedule3(schedule.current)
-      if(createResult.data.progressBar === 100){
-        setTimeout(() => {
-          setShowLoading(false)
-        }, 1000);
+      if(createResult.code === 200){
+        schedule.current = createResult.data.progressBar
+        setSchedule3(schedule.current)
+        if(createResult.data.progressBar === 100){
+          setTimeout(() => {
+            setShowLoading(false)
+          }, 1000);
+        }
+        if(createResult.data.resultStr?.taskStatus === 1){
+          callBack(createResult.data.resultStr.photos)
+          clearInterval(timer)
+        }
       }
-      if(createResult.data.resultstr === 1){
-        callBack(createResult.data.resultstr.images)
-        clearInterval(timer)
-      }
+     
     }, 3000);
   } 
   const getMjImg = (e, type) => {
