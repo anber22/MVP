@@ -160,14 +160,14 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
         body: JSON.stringify({
           "batch_size": 4,
           "cfg_scale": 7,
-          "comments": {},
+          "comments": {
+          },
           "denoising_strength": 0.7,
           "disable_extra_networks": false,
           "do_not_save_grid": false,
           "do_not_save_samples": false,
           "enable_hr": false,
-          "height": 512,
-          "weight": 512,
+          "height": 1024,
           "hr_negative_prompt": "",
           "hr_prompt": "",
           "hr_resize_x": 0,
@@ -191,7 +191,6 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           "sampler_name": "DPM++ 2M Karras",
           "script_args": [
       
-      
           ],
           "script_name": null,
           "seed": -1,
@@ -199,10 +198,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           "seed_resize_from_h": -1,
           "seed_resize_from_w": -1,
           "steps": 20,
-          "styles": [
-      
-      
-          ],
+          "styles": [],
           "subseed": -1,
           "subseed_strength": 0,
           "tiling": false,
