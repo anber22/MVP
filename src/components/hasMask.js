@@ -178,7 +178,7 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           "n_iter": 1,
           "negative_prompt": "",
           "override_settings": {
-              "sd_model_checkpoint": "moomooeCommerce_v4.safetensors [87e267a70b]"
+              "sd_model_checkpoint": "bate17/bate17_4800.safetensors [88df01509d]"
           },
           "override_settings_restore_afterwards": true,
           "prompt": description,

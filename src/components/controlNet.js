@@ -188,7 +188,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
         "n_iter": 1,
         "negative_prompt": "",
         "override_settings": {
-          "sd_model_checkpoint": "moomooeCommerce_v4.safetensors [87e267a70b]"
+          "sd_model_checkpoint": "bate17/bate17_4800.safetensors [88df01509d]"
         },
         "override_settings_restore_afterwards": true,
         "prompt": "",
@@ -306,7 +306,7 @@ export default function ControlNet({fullMask, segmentMask, mjImg, getSdImgs, pro
             "n_iter": 1,
             "negative_prompt": "(depth of field:1.4),(bokeh:1.31),(blurry:1.4),(worst quality:1.4),(low quality:1.4),(monochrome:1.1),Sketch,ng_deepnegative_v1_75t,(nsfw:1.21),tattoo,(beard:1.3),(EasyNegative:1.3),badhandv4,(Teeth:1.3),(worst quality:2),(low quality:2),(normal quality:2),lowers,normal quality,facing away,looking away,text,error,extra digit,fewer digits,cropped,jpeg artifacts,signature,watermark,username,blurry,skin spots,acnes,skin blemishes,bad anatomy,fat,bad feet,cropped,poorly drawn hands,poorly drawn face,mutation,deformed,tilted head.bad anatomy.bad hands,extra fingers,fewer digits.,extra limbs.extra arms,extra legs,malformed limbs.fused fingers.,too many fingers,long neck,cross-eyed,mutated hands,bad body,bad proportions,gross proportions,text,error,missing fingers,missing arms,missing legs,extra digit,extra arms,extra leg,extra foot,missing fingers,",
             "override_settings": {
-              "sd_model_checkpoint": "moomooeCommerce_v4.safetensors [87e267a70b]"
+              "sd_model_checkpoint": "bate17/bate17_4800.safetensors [88df01509d]"
             },
             "override_settings_restore_afterwards": true,
             "prompt": prompt + ", Product Photography, Film Grain, (masterpiece:1.33),(bestquality:1.33),(ultra-detailed:1.21),studio photography,(realistic:1.21),([Wall wash lighting|Followspot lighting|front lighting|Backlighting|Glare-free lighting]),",
