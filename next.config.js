@@ -9,7 +9,7 @@ const nextConfig = {
       },
       {
         source: '/mvp/:path*',
-        destination: 'https://back-end-api.aiproshots.com/:path*'
+        destination: 'http://back-end-api.aiproshots.com/:path*'
       },
       {
         source: '/img/:path*',

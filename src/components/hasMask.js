@@ -340,28 +340,31 @@ export default function HasMask({imgs, masks, gotMjImg, backToPrevious, getPromp
           onChange={handleChange}
           options={options}
         />
-        <TextArea className='w-370 mt-8' onChange={e => setDescription(e.target.value)} rows={7} placeholder="Example: Gradient Blue Background with Flowers" maxLength={2000} />
+        <div className='flex flex-row items-start mt-8'>
+          <TextArea className='w-370' onChange={e => setDescription(e.target.value)} rows={7} placeholder="Example: Gradient Blue Background with Flowers" maxLength={2000} />
+          {
+            uploadImg === '' ? (
+              <div className='mj-upload-img ml-6' onClick={() => getImg()}>
+                  (Optional)
+                <br/>
+                Upload an image
+                <br/>
+                <p className='mt-4'>
+                  Minimum 1024 x 1024, Square Size
+                </p>
+                <div className='mt-7 flex justify-center' >
+                  <img className='upload-img' src="/upload.png" />
+                </div>
+              </div>
+            ) : <img className='uploaded-img ml-6' src={uploadImg} onClick={() => getImg()}/>
+          }
+        </div>
         <div className='w-full flex mt-6'>
           <Button className='w-36' type="primary" onClick={() => {back()}}>Back</Button>
           <Button className='w-36 ml-6' type="primary" loading={loading} onClick={() => createMjImgToImg()}>Next</Button>
         </div>
       </div>
-      {
-        uploadImg === '' ? (
-          <div className='mj-upload-img ml-6' onClick={() => getImg()}>
-              (Optional)
-            <br/>
-            Upload an image
-            <br/>
-            <p className='mt-4'>
-              Minimum 1024 x 1024, Square Size
-            </p>
-            <div className='mt-7 flex justify-center' >
-              <img className='upload-img' src="/upload.png" />
-            </div>
-          </div>
-        ) : <img className='uploaded-img ml-6' src={uploadImg} onClick={() => getImg()}/>
-      }
+  
       <Modal width='880px' 
         title={null}
         icon={null} 
